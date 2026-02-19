@@ -4,97 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Team Us App</title>
-    <style>
-        body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            color: #333;
-            background: linear-gradient(to bottom, #ffccff, #ccffff);
-            animation: fadeIn 1s;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        h1 {
-            color: #ff69b4; /* Pink */
-        }
-
-        .profile {
-            border: 2px solid #00bfff; /* Blue */
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        .love-note {
-            margin: 10px 0;
-            padding: 10px;
-            border: 1px dashed #ff69b4;
-            background-color: #fff0f5; /* Light pink */
-        }
-
-        .button {
-            background-color: #00bfff; /* Blue */
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .button:hover {
-            background-color: #007acc; /* Darker blue */
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <h1>Welcome to Team Us!</h1>
-    <div class="profile">
-        <h2>Profile: Him</h2>
-        <!-- Content for Him -->
-    </div>
-    <div class="profile">
-        <h2>Profile: Her</h2>
-        <!-- Content for Her -->
+    <div id="login-screen">
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Enter username">
+        <input type="password" id="password" placeholder="Enter password">
+        <button onclick="login()">Login</button>
     </div>
 
-    <h2>Love Notes</h2>
-    <div class="love-note" id="loveNotes"></div>
-    <textarea id="noteInput" placeholder="Write a love note..."></textarea>
-    <button class="button" onclick="addLoveNote()">Add Love Note</button>
-
-    <h2>Calorie Tracker</h2>
-    <input type="number" id="calorieInput" placeholder="Calories" />
-    <button class="button" onclick="trackCalories()">Track Calories</button>
-
-    <h2>Water Reminders</h2>
-    <button class="button" onclick="setWaterReminder()">Set Water Reminder</button>
-
-    <h2>Cravings Guide</h2>
-    <div>
-        <!-- Cravings guide content -->
+    <div id="setup-screen" style="display:none;">
+        <h2>Setup Your Profile</h2>
+        <label for="profile-type">Choose Profile:</label>
+        <select id="profile-type">
+            <option value="him">Him</option>
+            <option value="her">Her</option>
+        </select>
+        <button onclick="setup()">Setup</button>
     </div>
 
-    <script>
-        function addLoveNote() {
-            const note = document.getElementById('noteInput').value;
-            const noteDiv = document.createElement('div');
-            noteDiv.textContent = note;
-            document.getElementById('loveNotes').appendChild(noteDiv);
-            document.getElementById('noteInput').value = '';
-        }
+    <div id="dashboard" style="display:none;">
+        <h2>Dashboard</h2>
+        <div id="calorie-tracking"></div>
+        <div id="water-reminders"></div>
+        <div id="love-notes">
+            <h3>Love Notes</h3>
+            <textarea id="love-notes-input" placeholder="Write a note..."></textarea>
+            <button onclick="saveLoveNote()">Save</button>
+        </div>
+        <div id="cravings-crusher">
+            <h3>Cravings Crusher</h3>
+            <input type="text" id="craving-input" placeholder="Enter your craving">
+            <button onclick="cravingCrusher()">Crush it!</button>
+        </div>
+        <div id="pixel-characters"></div>
+    </div>
 
-        function trackCalories() {
-            const calories = document.getElementById('calorieInput').value;
-            alert(`You've tracked ${calories} calories!`);
-        }
-
-        function setWaterReminder() {
-            alert("Don't forget to drink water!");
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
