@@ -4,44 +4,89 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Team Us App</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(to right, #ff69b4, #add8e6);
+            color: #333;
+            animation: fadeIn 1s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; } 
+            to { opacity: 1; }
+        }
+        /* Add styles for forms and other UI elements */
+        .profile { display: none; }
+        .active { display: block; }
+    </style>
 </head>
 <body>
-    <h1>Welcome to Team Us!</h1>
-    <div id="login-screen">
+    <h1>Welcome to Team Us</h1>
+    <div id="login">
         <h2>Login</h2>
-        <input type="text" id="username" placeholder="Enter username">
-        <input type="password" id="password" placeholder="Enter password">
-        <button onclick="login()">Login</button>
+        <input type="password" id="password" placeholder="Enter Password" />
+        <button id="loginBtn">Login</button>
     </div>
 
-    <div id="setup-screen" style="display:none;">
-        <h2>Setup Your Profile</h2>
-        <label for="profile-type">Choose Profile:</label>
-        <select id="profile-type">
-            <option value="him">Him</option>
-            <option value="her">Her</option>
-        </select>
-        <button onclick="setup()">Setup</button>
-    </div>
-
-    <div id="dashboard" style="display:none;">
-        <h2>Dashboard</h2>
-        <div id="calorie-tracking"></div>
-        <div id="water-reminders"></div>
-        <div id="love-notes">
-            <h3>Love Notes</h3>
-            <textarea id="love-notes-input" placeholder="Write a note..."></textarea>
-            <button onclick="saveLoveNote()">Save</button>
+    <div id="profiles" class="profile">
+        <h2>Profiles</h2>
+        <div id="him" class="profile-info active">
+            <h3>Him</h3>
+            <!-- Add Him's profile details -->
         </div>
-        <div id="cravings-crusher">
-            <h3>Cravings Crusher</h3>
-            <input type="text" id="craving-input" placeholder="Enter your craving">
-            <button onclick="cravingCrusher()">Crush it!</button>
+        <div id="her" class="profile-info">
+            <h3>Her</h3>
+            <!-- Add Her's profile details -->
         </div>
-        <div id="pixel-characters"></div>
+        <button id="switchProfile">Switch Profile</button>
+        <button id="logoutBtn">Logout</button>
     </div>
 
-    <script src="script.js"></script>
+    <div class="tracker">
+        <h2>Calorie Tracker</h2>
+        <input type="number" id="caloriesInput" placeholder="Calories" />
+        <button id="logCaloriesBtn">Log Calories</button>
+        <p id="calorieCount">Total Calories: 0</p>
+    </div>
+
+    <script>
+        let isLoggedIn = false;
+        const password = 'love2026';
+
+        document.getElementById('loginBtn').onclick = function() {
+            const inputPassword = document.getElementById('password').value;
+            if (inputPassword === password) {
+                isLoggedIn = true;
+                document.getElementById('login').style.display = 'none';
+                document.getElementById('profiles').style.display = 'block';
+            } else {
+                alert('Incorrect password.');
+            }
+        };
+
+        document.getElementById('switchProfile').onclick = function() {
+            const him = document.getElementById('him');
+            const her = document.getElementById('her');
+            if (him.classList.contains('active')) {
+                him.classList.remove('active');
+                her.classList.add('active');
+            } else {
+                her.classList.remove('active');
+                him.classList.add('active');
+            }
+        };
+
+        // Calorie tracking logic
+        let totalCalories = 0;
+        document.getElementById('logCaloriesBtn').onclick = function() {
+            const calories = parseInt(document.getElementById('caloriesInput').value);
+            if (!isNaN(calories)) {
+                totalCalories += calories;
+                document.getElementById('calorieCount').innerText = 'Total Calories: ' + totalCalories;
+            }
+        };
+
+        // Add other features like water reminders, love notes, cravings crusher, and local storage here.
+    </script>
 </body>
 </html>
