@@ -1,10 +1,179 @@
-        // REFINED CHARACTER CODE - Jonah & Yasmine
-        const charSVGs = {
-            male: `<svg viewBox="0 0 100 100" class="pixel-art">
-                <circle cx="50" cy="55" r="35" fill="#ffdbac"/> <rect x="30" y="20" width="40" height="15" fill="#111"/> <rect x="35" y="45" width="12" height="8" fill="none" stroke="#333" stroke-width="2"/> <rect x="53" y="45" width="12" height="8" fill="none" stroke="#333" stroke-width="2"/> <path d="M47 49 H53" stroke="#333" stroke-width="2"/> <circle cx="41" cy="58" r="1" fill="#d97706" opacity="0.6"/> <circle cx="59" cy="58" r="1" fill="#d97706" opacity="0.6"/>
-                <rect x="35" y="78" width="30" height="22" fill="#2d6a4f"/> </svg>`,
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Us: Jonah & Yasmine ✨</title>
+    <style>
+        :root { --fairy-green: #2d6a4f; --magic-purple: #7b2cbf; --soft-green: #d8f3dc; --lavender: #e0aaff; --gold: #ffea00; }
+        
+        body { 
+            font-family: 'Comic Sans MS', sans-serif; 
+            background: linear-gradient(135deg, #1b4332 0%, #3c096c 100%);
+            color: #333; margin: 0; padding: 10px; min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        /* Mystical Fairy Background Elements */
+        .sparkle { position: fixed; background: white; border-radius: 50%; opacity: 0.6; pointer-events: none; animation: fly 10s infinite linear; }
+        @keyframes fly { from { transform: translateY(100vh) scale(0); } to { transform: translateY(-10vh) scale(1.5); } }
+
+        .card { 
+            background: rgba(255, 255, 255, 0.95); border-radius: 30px; padding: 20px; 
+            max-width: 450px; width: 95%; margin: 10px auto; 
+            border: 4px solid var(--magic-purple); box-shadow: 0 0 25px rgba(123, 44, 191, 0.5);
+        }
+
+        #main-content, #setup-screen, #gate-screen { display: none; }
+
+        /* Character Container */
+        .char-box { width: 150px; height: 150px; margin: 0 auto; display: flex; align-items: center; justify-content: center; }
+        .pixel-char { width: 120px; height: 120px; image-rendering: pixelated; animation: bounce 2s infinite ease-in-out; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        /* Progress Bars */
+        .bar-bg { background: #eee; border-radius: 20px; height: 18px; width: 100%; margin: 8px 0; overflow: hidden; border: 1px solid #ccc; }
+        .bar-fill { height: 100%; width: 0%; transition: 1.2s cubic-bezier(0.17, 0.67, 0.83, 0.67); }
+        .my-bar { background: linear-gradient(90deg, var(--magic-purple), #9d4edd); }
+        .team-bar { background: linear-gradient(90deg, var(--fairy-green), #52b788); }
+
+        input, select { padding: 12px; border-radius: 15px; border: 2px solid var(--magic-purple); margin: 5px 0; width: 85%; font-family: inherit; }
+        button { background: var(--magic-purple); color: white; border: none; padding: 14px; border-radius: 50px; cursor: pointer; font-weight: bold; width: 100%; box-shadow: 0 4px 0 #3c096c; margin-top: 10px; }
+        button:active { transform: translateY(2px); box-shadow: 0 2px 0 #3c096c; }
+
+        .post-it { background: #fff9c4; padding: 15px; border-radius: 2px; transform: rotate(-1deg); box-shadow: 5px 5px 15px rgba(0,0,0,0.1); border-left: 5px solid var(--gold); margin: 20px 0; text-align: left; }
+    </style>
+</head>
+<body>
+
+    <div id="login-screen" style="margin-top: 20vh;">
+        <h1 style="color: white; text-shadow: 2px 2px var(--magic-purple);">Mystical Team Us ✨</h1>
+        <div class="card">
+            <input type="password" id="pass-input" placeholder="Secret Code">
+            <button onclick="checkPass()">Enter Forest 🌿</button>
+        </div>
+    </div>
+
+    <div id="gate-screen" style="margin-top: 10vh; width: 90%; max-width: 450px; text-align: center;">
+        <h2 style="color: white;">Who is logging in?</h2>
+        <button style="background: var(--fairy-green); height: 80px; margin-bottom: 10px;" onclick="selectUser('male')">Jonah 🕶️</button>
+        <button style="background: var(--magic-purple); height: 80px;" onclick="selectUser('female')">Yasmine 🎀</button>
+    </div>
+
+    <div id="main-content">
+        <div class="card">
+            <div class="char-box" id="char-render"></div>
+            <h2 id="welcome-msg" style="margin: 0; color: var(--magic-purple);"></h2>
             
-            female: `<svg viewBox="0 0 100 100" class="pixel-art">
-                <circle cx="50" cy="55" r="35" fill="#ffdbac"/> <path d="M20 55 Q20 10 50 10 Q80 10 80 55 L85 75 L15 75 Z" fill="#111"/> <circle cx="40" cy="55" r="2.5" fill="#222"/> <circle cx="60" cy="55" r="2.5" fill="#222"/>
-                <rect x="35" y="78" width="30" height="22" fill="#7b2cbf"/> </svg>`
+            <p style="margin: 15px 0 0; font-size: 0.8rem; text-align: left; font-weight: bold;">🌟 My Daily Goal:</p>
+            <div class="bar-bg"><div id="my-bar" class="bar-fill my-bar"></div></div>
+            
+            <p style="margin: 5px 0 0; font-size: 0.8rem; text-align: left; font-weight: bold;">🌿 Team Effort:</p>
+            <div class="bar-bg"><div id="team-bar" class="bar-fill team-bar"></div></div>
+
+            <div style="display:flex; gap:10px; margin: 20px 0; background: #f8f9fa; padding: 10px; border-radius: 15px;">
+                <div style="flex:1;">Goal<br><b id="s-goal">0</b></div>
+                <div style="flex:1;">Today<br><b id="s-net">0</b></div>
+                <div style="flex:1;">Left<br><b id="s-rem">0</b></div>
+            </div>
+
+            <div style="display: flex; gap: 5px;">
+                <input type="number" id="cal-val" placeholder="Cals" style="width: 50%;">
+                <button onclick="updateCals('eat')" style="margin:0;">Eat</button>
+                <button onclick="updateCals('burn')" style="background:var(--fairy-green); margin:0;">Burn</button>
+                <button onclick="logWater()" style="background:#4895ef; width:70px; margin:0;">💧</button>
+            </div>
+
+            <div class="post-it">
+                <b>Message for my Partner:</b><br>
+                <i id="display-note">...</i><br>
+                <input type="text" id="note-input" placeholder="Say something sweet..." style="width:70%; margin-top:5px; font-size:0.8rem;">
+                <button onclick="saveNote()" style="width:50px; padding:5px; font-size:0.6rem; margin:0;">Post</button>
+            </div>
+
+            <button onclick="resetAll()" style="background:none; color:#bbb; box-shadow:none; font-size:0.5rem;">Reset All</button>
+        </div>
+    </div>
+
+    <script>
+        const PASS = "love0930";
+        
+        // CHARACTER REDESIGN BASED ON YOUR IMAGE
+        const charSVGs = {
+            male: `<svg viewBox="0 0 100 120" class="pixel-char">
+                <rect x="30" y="20" width="40" height="40" fill="#ffdbac"/> <rect x="30" y="15" width="40" height="10" fill="#111"/> <rect x="25" y="20" width="10" height="25" fill="#111"/> <rect x="65" y="20" width="10" height="25" fill="#111"/> <rect x="35" y="38" width="12" height="10" fill="none" stroke="#000" stroke-width="2"/> <rect x="53" y="38" width="12" height="10" fill="none" stroke="#000" stroke-width="2"/>
+                <rect x="47" y="42" width="6" height="2" fill="#000"/> <rect x="38" y="55" width="2" height="2" fill="#d97706" opacity="0.5"/> <rect x="60" y="55" width="2" height="2" fill="#d97706" opacity="0.5"/>
+                <rect x="35" y="60" width="30" height="40" fill="#2d6a4f"/> <rect x="30" y="65" width="10" height="20" fill="#ffdbac"/> <rect x="60" y="65" width="10" height="20" fill="#ffdbac"/> </svg>`,
+            female: `<svg viewBox="0 0 100 120" class="pixel-char">
+                <rect x="30" y="20" width="40" height="40" fill="#ffdbac"/> <path d="M20 15 H80 V70 H70 V45 H30 V70 H20 Z" fill="#111"/> <rect x="40" y="42" width="4" height="4" fill="#000"/> <rect x="56" y="42" width="4" height="4" fill="#000"/>
+                <rect x="42" y="52" width="16" height="4" fill="#ffb7b2" opacity="0.6"/> <rect x="35" y="60" width="30" height="40" fill="#7b2cbf"/> <rect x="30" y="65" width="10" height="20" fill="#ffdbac"/> <rect x="60" y="65" width="10" height="20" fill="#ffdbac"/> </svg>`
         };
+
+        // Standard App Logic
+        let data = JSON.parse(localStorage.getItem('teamUsV3')) || {
+            male: { g: 2000, c: 0, setup: true },
+            female: { g: 1800, c: 0, setup: true },
+            note: "I love you! Let's crush our goals! 💖"
+        };
+        let currentUser = 'male';
+
+        function checkPass() {
+            if (document.getElementById('pass-input').value === PASS) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('gate-screen').style.display = 'block';
+                createSparkles();
+            }
+        }
+
+        function createSparkles() {
+            for(let i=0; i<15; i++) {
+                let s = document.createElement('div');
+                s.className = 'sparkle';
+                s.style.left = Math.random() * 100 + "vw";
+                s.style.width = s.style.height = Math.random() * 5 + 2 + "px";
+                s.style.animationDelay = Math.random() * 5 + "s";
+                document.body.appendChild(s);
+            }
+        }
+
+        function selectUser(u) {
+            currentUser = u;
+            document.getElementById('gate-screen').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+            document.getElementById('welcome-msg').innerText = "Welcome " + (u === 'male' ? "Jonah" : "Yasmine");
+            document.getElementById('char-render').innerHTML = charSVGs[u];
+            document.getElementById('display-note').innerText = data.note;
+            refresh();
+        }
+
+        function updateCals(type) {
+            const val = parseInt(document.getElementById('cal-val').value) || 0;
+            data[currentUser].c += (type === 'eat' ? val : -val);
+            localStorage.setItem('teamUsV3', JSON.stringify(data));
+            refresh();
+            document.getElementById('cal-val').value = '';
+        }
+
+        function saveNote() {
+            data.note = document.getElementById('note-input').value;
+            document.getElementById('display-note').innerText = data.note;
+            localStorage.setItem('teamUsV3', JSON.stringify(data));
+            document.getElementById('note-input').value = '';
+        }
+
+        function refresh() {
+            const u = data[currentUser];
+            document.getElementById('s-goal').innerText = u.g;
+            document.getElementById('s-net').innerText = u.c;
+            document.getElementById('s-rem').innerText = Math.max(0, u.g - u.c);
+            
+            document.getElementById('my-bar').style.width = Math.min((u.c / u.g) * 100, 100) + "%";
+            let totalGoal = data.male.g + data.female.g;
+            let totalEat = data.male.c + data.female.c;
+            document.getElementById('team-bar').style.width = Math.min((totalEat / totalGoal) * 100, 100) + "%";
+        }
+
+        function resetAll() { localStorage.clear(); location.reload(); }
+    </script>
+</body>
+</html>
