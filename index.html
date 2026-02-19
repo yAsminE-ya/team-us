@@ -14,13 +14,6 @@
             display: flex; flex-direction: column; align-items: center;
         }
 
-        /* Animated Sparkles */
-        body::before {
-            content: "✨"; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; opacity: 0.3; font-size: 20px; animation: sparkle 10s infinite;
-        }
-        @keyframes sparkle { 0% { transform: translateY(0); } 100% { transform: translateY(-100vh); } }
-
         .card { 
             background: rgba(255, 255, 255, 0.95); border-radius: 30px; padding: 20px; 
             max-width: 450px; width: 90%; margin: 10px auto; 
@@ -29,11 +22,17 @@
 
         #main-content, #setup-screen, #gate-screen { display: none; }
 
-        /* Animated Couple */
-        .char-box { background: white; border-radius: 50%; width: 120px; height: 120px; margin: 0 auto 10px; border: 3px solid var(--fairy-green); display: flex; align-items: center; justify-content: center; animation: float 3s infinite ease-in-out; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        /* CHARACTER DISPLAY FIX */
+        .char-box { 
+            background: white; border-radius: 50%; width: 120px; height: 120px; 
+            margin: 0 auto 10px; border: 3px solid var(--fairy-green); 
+            display: flex; align-items: center; justify-content: center; 
+            box-shadow: 0 0 15px var(--gold);
+        }
+        .pixel-art { width: 90px; height: 90px; image-rendering: pixelated; animation: hop 2s infinite ease-in-out; }
+        @keyframes hop { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-8px) scale(1.05); } }
 
-        /* Bars */
+        /* Progress Bars */
         .bar-bg { background: #eee; border-radius: 20px; height: 15px; width: 100%; margin: 5px 0; overflow: hidden; border: 1px solid #ccc; }
         .bar-fill { height: 100%; width: 0%; transition: 1s ease-in-out; }
         .my-bar { background: var(--magic-purple); }
@@ -43,16 +42,14 @@
         button { background: var(--magic-purple); color: white; border: none; padding: 14px; border-radius: 50px; cursor: pointer; font-weight: bold; width: 100%; box-shadow: 0 4px 0 #3c096c; margin-top: 10px; }
         button:active { transform: translateY(2px); box-shadow: 0 2px 0 #3c096c; }
 
-        .gate-btn { height: 120px; font-size: 1.3rem; margin-bottom: 20px; }
-
-        /* Post-it */
+        .gate-btn { height: 100px; font-size: 1.2rem; margin-bottom: 15px; }
         .post-it { background: #fff9c4; padding: 15px; border-radius: 2px; transform: rotate(-1deg); box-shadow: 5px 5px 15px rgba(0,0,0,0.1); border-left: 5px solid var(--gold); margin: 20px 0; text-align: left; }
         .recipe-box { background: var(--soft-green); border-radius: 20px; padding: 15px; border: 2px solid var(--fairy-green); font-size: 0.85rem; margin-top: 10px; text-align: left; }
     </style>
 </head>
 <body>
 
-    <div id="login-screen" style="margin-top: 20vh;">
+    <div id="login-screen" style="margin-top: 15vh;">
         <h1 style="color: white; text-shadow: 2px 2px var(--magic-purple);">Mystical Team Us ✨</h1>
         <div class="card">
             <input type="password" id="pass-input" placeholder="Enter Secret Code">
@@ -60,7 +57,7 @@
         </div>
     </div>
 
-    <div id="gate-screen" style="margin-top: 10vh; width: 90%; max-width: 450px;">
+    <div id="gate-screen" style="margin-top: 5vh; width: 90%; max-width: 450px;">
         <h2 style="color: white; text-align: center;">Choose Your Path:</h2>
         <button class="gate-btn" style="background: var(--fairy-green);" onclick="selectUser('male')">Jonah 🕶️</button>
         <button class="gate-btn" style="background: var(--magic-purple);" onclick="selectUser('female')">Yasmine 🎀</button>
@@ -85,88 +82,78 @@
 
     <div id="main-content">
         <div class="card">
-            <div class="char-box" id="char-render"></div>
+            <div class="char-box" id="char-render">
+                </div>
             <h2 id="welcome-msg" style="margin: 0; color: var(--magic-purple);"></h2>
-            <p id="notif-bar" style="color: var(--fairy-green); font-weight: bold; font-size: 0.8rem; height: 15px;"></p>
-
+            
             <p style="margin: 10px 0 0; font-size: 0.7rem; text-align: left;">My Progress:</p>
             <div class="bar-bg"><div id="my-bar" class="bar-fill my-bar"></div></div>
             
-            <p style="margin: 5px 0 0; font-size: 0.7rem; text-align: left;">Shared Team Effort:</p>
+            <p style="margin: 5px 0 0; font-size: 0.7rem; text-align: left;">Team Effort:</p>
             <div class="bar-bg"><div id="team-bar" class="bar-fill team-bar"></div></div>
 
-            <div style="display:flex; gap:5px; margin: 15px 0;">
+            <div style="display:flex; gap:5px; margin: 15px 0; font-size: 0.9rem;">
                 <div style="flex:1;">Goal<br><b id="s-goal">0</b></div>
                 <div style="flex:1;">Today<br><b id="s-net">0</b></div>
                 <div style="flex:1;">Left<br><b id="s-rem">0</b></div>
             </div>
 
-            <input type="number" id="cal-val" placeholder="Calories...">
+            <input type="number" id="cal-val" placeholder="Add Calories...">
             <div style="display: flex; gap: 5px;">
                 <button onclick="updateCals('eat')">Eat</button>
-                <button onclick="updateCals('burn')" style="background:var(--fairy-green); box-shadow: 0 4px 0 #1b4332;">Burn</button>
-                <button onclick="logWater()" style="background:#4895ef; box-shadow: 0 4px 0 #3f37c9; width:70px;">💧</button>
+                <button onclick="updateCals('burn')" style="background:var(--fairy-green);">Burn</button>
+                <button onclick="logWater()" style="background:#4895ef; width:70px;">💧</button>
             </div>
 
             <div class="recipe-box">
-                <b>📅 7-Day Plan: Day <span id="day-num">1</span></b>
+                <b>📅 Plan: Day <span id="day-num">1</span></b>
                 <p id="meal-info" style="margin: 5px 0;"></p>
-                <button onclick="nextDay()" style="font-size: 0.7rem; padding: 5px; background: var(--fairy-green);">Next Day Recipe ➡️</button>
+                <button onclick="nextDay()" style="font-size: 0.7rem; padding: 5px; background: var(--fairy-green);">Next Recipe ➡️</button>
             </div>
 
             <div class="recipe-box" style="border-color: var(--magic-purple); background: var(--lavender);">
-                <b>🏋️ Workout Magic</b>
-                <select id="work-area"><option>Full Body Burn</option><option>Strong Arms</option><option>Legs & Glutes</option><option>Core/Abs</option></select>
+                <b>🏋️ Workout Customizer</b>
+                <select id="work-area"><option>Full Body Burn</option><option>Strong Arms</option><option>Legs & Glutes</option></select>
                 <select id="work-time">
-                    <option value="300">5 Minutes</option><option value="600">10 Minutes</option>
-                    <option value="1200">20 Minutes</option><option value="1800">30 Minutes</option>
-                    <option value="3600">60 Minutes</option>
+                    <option value="300">5 Mins</option><option value="600">10 Mins</option><option value="1800">30 Mins</option><option value="3600">60 Mins</option>
                 </select>
-                <div id="timer-display" style="font-size: 1.8rem; font-weight: bold; text-align: center;">05:00</div>
-                <button onclick="startWorkout()" style="background: var(--magic-purple);">Start Timer</button>
+                <div id="timer-display" style="font-size: 1.5rem; font-weight: bold; text-align: center; margin: 5px 0;">05:00</div>
+                <button onclick="startWorkout()" style="background: var(--magic-purple);">Start Workout</button>
             </div>
 
             <div class="post-it">
-                <b>Fairy Note:</b><br>
-                <i id="display-note">Write a note...</i><br>
-                <input type="text" id="note-input" placeholder="Type here..." style="width:75%; margin-top:5px; font-size:0.8rem;">
+                <b>Partner Note:</b><br>
+                <i id="display-note">...</i><br>
+                <input type="text" id="note-input" placeholder="Type a note..." style="width:70%; margin-top:5px; font-size:0.8rem;">
                 <button onclick="saveNote()" style="width:50px; padding:5px; font-size:0.6rem; margin:0;">Post</button>
             </div>
 
-            <div style="text-align: left; font-size: 0.8rem;">
-                <b>🌙 Late Night Cravings:</b>
-                <div id="snack-display" style="margin: 5px 0; min-height: 20px;">Tap a snack!</div>
-                <div style="display:flex; flex-wrap:wrap; gap:5px;">
-                    <button onclick="showSnack('Frozen Grapes', 'Freeze for 3hrs. Tastes like candy! (60 cals)')" style="width:auto; padding:5px 10px; font-size:0.7rem;">Grapes</button>
-                    <button onclick="showSnack('Yogurt Bark', 'Greek yogurt + berries. Freeze thin. (80 cals)')" style="width:auto; padding:5px 10px; font-size:0.7rem;">Yogurt Bark</button>
-                </div>
-            </div>
-            
-            <button onclick="resetAll()" style="background:none; color:#bbb; box-shadow:none; font-size:0.5rem; margin-top:20px;">Reset All Data</button>
+            <button onclick="resetAll()" style="background:none; color:#bbb; box-shadow:none; font-size:0.5rem; margin-top:20px;">Reset All</button>
         </div>
     </div>
 
     <script>
         const PASS = "love0930";
         const meals = [
-            "Breakfast: Egg White Scramble w/ Spinach | Dinner: Grilled Lemon Chicken & Asparagus",
-            "Breakfast: Greek Yogurt & Fresh Berries | Dinner: Baked Salmon & Zucchini Noodles",
-            "Breakfast: Overnight Oats w/ Almond Milk | Dinner: Turkey Taco Bowl (No Shell)",
-            "Breakfast: Protein Smoothie | Dinner: Roasted Tofu & Stir-fry Veggies",
-            "Breakfast: Cottage Cheese & Pineapple | Dinner: Lean Steak Strip & Salad",
-            "Breakfast: Banana & PB (1 tsp) | Dinner: Shrimp & Garlic Cauliflower Rice",
-            "Breakfast: 2 Hard Boiled Eggs & Apple | Dinner: Pesto Chicken & Roasted Peppers"
+            "Egg White Scramble & Toast | Grilled Lemon Chicken",
+            "Greek Yogurt & Berries | Baked Salmon & Zoodles",
+            "Overnight Oats | Turkey Taco Bowl",
+            "Protein Smoothie | Roasted Tofu & Stir-fry",
+            "Cottage Cheese & Pineapple | Lean Steak & Salad",
+            "Banana & 1 tsp PB | Shrimp & Cauliflower Rice",
+            "2 Eggs & Apple | Pesto Chicken & Peppers"
         ];
 
-        const icons = {
-            male: `<svg viewBox="0 0 20 20" style="width:90px;"><circle cx="10" cy="11" r="8" fill="#ffdbac"/><rect x="6" y="3" width="8" height="5" fill="black"/><rect x="7" y="9" width="2" height="1" fill="#333"/><rect x="11" y="9" width="2" height="1" fill="#333"/><rect x="6" y="9" width="1" height="3" fill="black"/><rect x="13" y="9" width="1" height="3" fill="black"/><circle cx="8" cy="11" r="0.3" fill="#d97706" opacity="0.6"/><circle cx="12" cy="11" r="0.3" fill="#d97706" opacity="0.6"/><rect x="6" y="14" width="8" height="4" fill="#2d6a4f"/></svg>`,
-            female: `<svg viewBox="0 0 20 20" style="width:90px;"><circle cx="10" cy="11" r="8" fill="#ffdbac"/><path d="M3 11 Q3 2 10 2 Q17 2 17 11" fill="black"/><rect x="7" y="10" width="1" height="1" fill="black"/><rect x="12" y="10" width="1" height="1" fill="black"/><rect x="6" y="14" width="8" height="4" fill="#7b2cbf"/></svg>`
+        // REFINED CHARACTER CODE
+        const charSVGs = {
+            male: `<svg viewBox="0 0 100 100" class="pixel-art"><circle cx="50" cy="55" r="35" fill="#ffdbac"/><rect x="35" y="15" width="30" height="25" fill="black"/><rect x="38" y="48" width="10" height="4" fill="none" stroke="black" stroke-width="2"/><rect x="52" y="48" width="10" height="4" fill="none" stroke="black" stroke-width="2"/><path d="M48 50 H52" stroke="black" stroke-width="2"/><circle cx="41" cy="55" r="1.5" fill="#d97706"/><circle cx="59" cy="55" r="1.5" fill="#d97706"/><rect x="35" y="75" width="30" height="20" fill="#2d6a4f"/></svg>`,
+            female: `<svg viewBox="0 0 100 100" class="pixel-art"><circle cx="50" cy="55" r="35" fill="#ffdbac"/><path d="M20 55 Q20 10 50 10 Q80 10 80 55" fill="black"/><circle cx="40" cy="55" r="2" fill="black"/><circle cx="60" cy="55" r="2" fill="black"/><rect x="35" y="75" width="30" height="20" fill="#7b2cbf"/></svg>`
         };
 
-        let data = JSON.parse(localStorage.getItem('mysticTeamData')) || {
+        let data = JSON.parse(localStorage.getItem('mysticTeamV2')) || {
             male: { g: 0, c: 0, setup: false },
             female: { g: 0, c: 0, setup: false },
-            note: "Welcome to the forest! 🌿", waterTime: Date.now(), dayIdx: 0
+            note: "Welcome! 💖", waterTime: Date.now(), dayIdx: 0
         };
         let currentUser = 'male';
         let tInt;
@@ -175,16 +162,13 @@
             if (document.getElementById('pass-input').value === PASS) {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('gate-screen').style.display = 'block';
-            } else { alert("The forest denies you. (Wrong Code)"); }
+            } else { alert("Forest Denied!"); }
         }
 
         function selectUser(u) {
             currentUser = u;
             document.getElementById('gate-screen').style.display = 'none';
-            if (data[u].setup) { showApp(); } else { 
-                document.getElementById('setup-screen').style.display = 'block';
-                document.getElementById('setup-title').innerText = u === 'male' ? "Jonah's Path" : "Yasmine's Path";
-            }
+            if (data[u].setup) { showApp(); } else { document.getElementById('setup-screen').style.display = 'block'; }
         }
 
         function saveSetup() {
@@ -201,17 +185,9 @@
             document.getElementById('setup-screen').style.display = 'none';
             document.getElementById('main-content').style.display = 'block';
             document.getElementById('welcome-msg').innerText = "Welcome " + (currentUser === 'male' ? "Jonah" : "Yasmine") + "!";
-            document.getElementById('char-render').innerHTML = icons[currentUser];
+            document.getElementById('char-render').innerHTML = charSVGs[currentUser];
             document.getElementById('display-note').innerText = data.note;
             refresh();
-            setInterval(remind, 60000); remind();
-        }
-
-        function remind() {
-            const bar = document.getElementById('notif-bar');
-            const now = Date.now();
-            if ((now - data.waterTime) > 7200000) bar.innerText = "💦 Sip some water, Jonah & Yasmine!";
-            else bar.innerText = "✨ The forest is with you.";
         }
 
         function updateCals(m) {
@@ -227,7 +203,7 @@
                 time--;
                 let m = Math.floor(time/60), s = time % 60;
                 document.getElementById('timer-display').innerText = `${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
-                if (time <= 0) { clearInterval(tInt); alert("Workout Complete! You're stronger now. 💪"); }
+                if (time <= 0) { clearInterval(tInt); alert("Workout Complete! 💪"); }
             }, 1000);
         }
 
@@ -238,26 +214,22 @@
         }
 
         function logWater() { data.waterTime = Date.now(); save(); alert("Water Logged! 💧"); }
-        function showSnack(n, r) { document.getElementById('snack-display').innerHTML = `<b>${n}:</b> ${r}`; }
         function nextDay() { data.dayIdx = (data.dayIdx + 1) % 7; refresh(); save(); }
 
         function refresh() {
             const u = data[currentUser];
             document.getElementById('s-goal').innerText = u.g;
             document.getElementById('s-net').innerText = u.c;
-            document.getElementById('s-rem').innerText = u.g - u.c;
+            document.getElementById('s-rem').innerText = Math.max(0, u.g - u.c);
             document.getElementById('day-num').innerText = data.dayIdx + 1;
             document.getElementById('meal-info').innerText = meals[data.dayIdx];
-            
-            // Progress bars
             document.getElementById('my-bar').style.width = Math.min((u.c / u.g) * 100, 100) + "%";
-            let teamGoal = data.male.g + data.female.g;
-            let teamEat = data.male.c + data.female.c;
+            let teamGoal = data.male.g + data.female.g, teamEat = data.male.c + data.female.c;
             document.getElementById('team-bar').style.width = teamGoal > 0 ? Math.min((teamEat / teamGoal) * 100, 100) + "%" : "0%";
         }
 
-        function save() { localStorage.setItem('mysticTeamData', JSON.stringify(data)); }
-        function resetAll() { if(confirm("Start a new journey?")) { localStorage.clear(); location.reload(); } }
+        function save() { localStorage.setItem('mysticTeamV2', JSON.stringify(data)); }
+        function resetAll() { localStorage.clear(); location.reload(); }
     </script>
 </body>
 </html>
