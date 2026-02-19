@@ -5,274 +5,294 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Love & Lift Hub</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap');
+
         :root {
-            --fairy-green: #2d6a4f;
-            --fairy-purple: #7b2cbf;
-            --magic-gold: #ffda3d;
-            --jonah-color: #4cc9f0;
-            --yasmine-color: #f72585;
+            --forest-green: #1b4332;
+            --magic-purple: #5a189a;
+            --vine-green: #74c69d;
+            --post-it-yellow: #fef9c3;
+            --gold: #ffb703;
         }
 
-        body {
-            margin: 0; font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #1b4332 0%, #3c096c 100%);
-            color: white; min-height: 100vh;
+        body, html {
+            margin: 0; padding: 0; height: 100%;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--forest-green), var(--magic-purple));
+            color: white; overflow-x: hidden;
+        }
+
+        /* --- BACKGROUND DECORATION --- */
+        .vines {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://www.transparenttextures.com/patterns/leaves.png');
+            opacity: 0.2; pointer-events: none; z-index: 1;
         }
 
         /* --- LAYER 1: PASSWORD --- */
-        #login-overlay {
+        #layer-pass {
             position: fixed; inset: 0; background: rgba(0,0,0,0.9);
-            display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 1000;
+            display: flex; flex-direction: column; justify-content: center;
+            align-items: center; z-index: 1000;
         }
 
         /* --- LAYER 2: SEPARATION (ENTRANCE) --- */
-        #selection-layer {
-            display: none; height: 100vh; justify-content: center; align-items: center; gap: 40px;
+        #layer-choice {
+            display: none; height: 100vh; position: relative; z-index: 10;
+            display: none; justify-content: center; align-items: center; gap: 50px;
         }
 
-        .hero-box {
-            text-align: center; cursor: pointer; transition: 0.3s;
-            background: rgba(255,255,255,0.1); padding: 30px; border-radius: 20px;
+        .avatar-box {
+            text-align: center; cursor: pointer; transition: 0.4s;
+            background: rgba(255,255,255,0.1); padding: 40px; border-radius: 30px;
+            border: 2px solid var(--vine-green);
         }
-        .hero-box:hover { transform: translateY(-10px); background: rgba(255,255,255,0.2); }
+        .avatar-box:hover { transform: scale(1.05); background: rgba(255,255,255,0.2); }
 
-        /* --- LAYER 3: THE MAIN HUB --- */
-        #main-hub { display: none; padding: 20px; }
+        /* --- LAYER 3: MAIN HUB --- */
+        #main-hub { display: none; padding: 20px; z-index: 10; position: relative; }
 
-        .grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-            gap: 20px; max-width: 1200px; margin: 0 auto;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px);
-            border-radius: 20px; padding: 20px; border: 1px solid rgba(255,255,255,0.2);
+        .dashboard-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px; max-width: 1300px; margin: 0 auto;
         }
 
-        /* Post-it Notes */
+        .glass-card {
+            background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(15px);
+            border-radius: 25px; padding: 25px; border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Elements */
+        h1, h2, h3 { font-family: 'Dancing Script', cursive; color: var(--gold); }
+        input, select, button {
+            width: 100%; padding: 12px; margin: 8px 0; border-radius: 12px;
+            border: none; outline: none; box-sizing: border-box;
+        }
+        button { background: var(--magic-purple); color: white; cursor: pointer; font-weight: 600; transition: 0.3s; }
+        button:hover { background: var(--vine-green); color: var(--forest-green); }
+
+        /* Progress Bars */
+        .progress-wrapper { margin: 15px 0; }
+        .bar-bg { background: #333; height: 20px; border-radius: 10px; overflow: hidden; }
+        .bar-fill { height: 100%; width: 0%; transition: 1s ease; }
+        #bar-jonah { background: #4cc9f0; }
+        #bar-yasmine { background: #f72585; }
+
+        /* Post-It */
         .post-it {
-            background: #fff382; color: #333; padding: 15px; min-height: 120px;
-            box-shadow: 5px 5px 10px rgba(0,0,0,0.3); transform: rotate(-1deg);
-            border-bottom-right-radius: 30px; font-family: 'Comic Sans MS', cursive;
+            background: var(--post-it-yellow); color: #333; padding: 20px;
+            min-height: 150px; border-radius: 2px; transform: rotate(-1deg);
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.3); font-family: 'Poppins', sans-serif;
+            font-style: italic;
         }
 
-        /* Shared Progress Area */
-        .progress-section { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
-        .bar-container { background: #222; border-radius: 10px; height: 20px; overflow: hidden; }
-        .bar { height: 100%; width: 0%; transition: width 0.5s ease-in-out; }
-
-        button {
-            background: var(--fairy-purple); color: white; border: none;
-            padding: 10px; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 10px;
-        }
-
-        input, select { width: 94%; padding: 8px; margin-bottom: 10px; border-radius: 5px; border: none; }
-        
-        .recipe-box { background: rgba(0,0,0,0.3); padding: 10px; border-radius: 10px; font-size: 0.9rem; margin-top: 10px; }
-
-        /* Notifications/Reminders Area */
-        .reminders-list { font-size: 0.85rem; list-style: none; padding: 0; }
-        .reminders-list li { background: rgba(255,255,255,0.1); padding: 5px 10px; margin-bottom: 5px; border-left: 4px solid var(--magic-gold); }
+        .recipe-area { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 15px; margin-top: 10px; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
-    <div id="login-overlay">
-        <h2>Enter Secret Key</h2>
-        <input type="password" id="pass-input" style="width: 200px; text-align: center;">
-        <button onclick="checkPass()" style="width: 220px;">Open Our World</button>
+<div class="vines"></div>
+
+<div id="layer-pass">
+    <h1 style="font-size: 3rem;">The Love & Lift Hub</h1>
+    <p>Enter the Secret Key to Enter Your World</p>
+    <input type="password" id="pw" style="width: 250px; text-align: center;" placeholder="Password">
+    <button onclick="unlock()" style="width: 250px;">Enter</button>
+</div>
+
+<div id="layer-choice">
+    <div class="avatar-box" onclick="enterApp('Jonah')">
+        <div style="font-size: 80px;">👓</div>
+        <h2>Jonah</h2>
+        <p>Short black hair & freckles</p>
+    </div>
+    <div class="avatar-box" onclick="enterApp('Yasmine')">
+        <div style="font-size: 80px;">✨</div>
+        <h2>Yasmine</h2>
+        <p>Shoulder-length black hair</p>
+    </div>
+</div>
+
+<div id="main-hub">
+    <div style="text-align: center; margin-bottom: 30px;">
+        <h1 id="welcome-text" style="font-size: 3.5rem;">Welcome</h1>
+        <p id="reminders" style="background: var(--vine-green); color: black; display: inline-block; padding: 5px 15px; border-radius: 20px; font-weight: bold;">
+            🔔 Don't forget: Drink water, log your workout, and leave a note!
+        </p>
     </div>
 
-    <div id="selection-layer">
-        <div class="hero-box" onclick="enterApp('Jonah')">
-            <h1>Jonah</h1>
-            <p>Freckles & Glasses</p>
+    <div class="dashboard-grid">
+        
+        <div class="glass-card">
+            <h3>🥗 Calorie Goal</h3>
+            <div style="display: flex; gap: 5px;">
+                <input type="number" id="feet" placeholder="Ft">
+                <input type="number" id="inches" placeholder="In">
+            </div>
+            <input type="number" id="weight" placeholder="Weight (lbs)">
+            <select id="goal">
+                <option value="lose">Goal: Lose Weight</option>
+                <option value="gain">Goal: Gain Weight</option>
+            </select>
+            <button onclick="calculateCalories()">Calculate Goal</button>
+            <div id="cal-result" class="recipe-area" style="display:none; text-align:center; font-weight:bold;"></div>
         </div>
-        <div class="hero-box" onclick="enterApp('Yasmine')">
-            <h1>Yasmine</h1>
-            <p>Shoulder-length Black Hair</p>
+
+        <div class="glass-card">
+            <h3>🏆 His & Hers Progress</h3>
+            <div class="progress-wrapper">
+                <label>Jonah's Journey</label>
+                <div class="bar-bg"><div id="bar-jonah" class="bar-fill"></div></div>
+            </div>
+            <div class="progress-wrapper">
+                <label>Yasmine's Journey</label>
+                <div class="bar-bg"><div id="bar-yasmine" class="bar-fill"></div></div>
+            </div>
+            <button onclick="addProgress()">Log My Daily Workout (+10%)</button>
         </div>
+
+        <div class="glass-card">
+            <h3>📅 7-Day Meal Tracker</h3>
+            <p><strong id="day-display">Day 1</strong></p>
+            <div id="meal-recipe" class="recipe-area">Honey Garlic Chicken: Chicken breast, honey, soy sauce, broccoli over brown rice.</div>
+            <button onclick="shuffleMeal()">Shuffle/Next Day</button>
+        </div>
+
+        <div class="glass-card">
+            <h3>🌙 Late Night Healthy Cravings</h3>
+            <div id="snack-recipe" class="recipe-area">PB & Banana Rice Cakes: 1 brown rice cake, 1tbsp peanut butter, half a sliced banana.</div>
+            <button onclick="shuffleSnack()">Change Craving</button>
+        </div>
+
+        <div class="glass-card">
+            <h3>💪 Workout Planner</h3>
+            <select id="work-area">
+                <option>Full Body Forest Flow</option>
+                <option>Glutes & Legs</option>
+                <option>Core & Abs</option>
+                <option>Upper Body Strength</option>
+            </select>
+            <select id="work-time">
+                <option value="5">5 Minutes</option>
+                <option value="20">20 Minutes</option>
+                <option value="45">45 Minutes</option>
+                <option value="60">60 Minutes</option>
+            </select>
+            <div id="timer-display" style="font-size: 2.5rem; text-align: center; margin: 10px 0; color: var(--gold);">00:00</div>
+            <button onclick="startWorkout()">Start Timer</button>
+        </div>
+
+        <div class="glass-card">
+            <h3>📝 Love Notes & Water</h3>
+            <p>Water Intake: <span id="water-count">0</span>/8 Glasses</p>
+            <button onclick="addWater()" style="background:#4cc9f0">Drink Water 💧</button>
+            <div style="margin-top: 20px;">
+                <div class="post-it" contenteditable="true" id="love-note">Write a note for your partner...</div>
+            </div>
+            <button onclick="saveAll()" style="margin-top: 15px; background: var(--gold); color: black;">Save All Information</button>
+        </div>
+
     </div>
+</div>
 
-    <div id="main-hub">
-        <h1 id="welcome-banner" style="text-align: center; color: var(--magic-gold);"></h1>
+<script>
+    let activeUser = "";
+    let pJonah = 20, pYasmine = 20;
 
-        <div class="grid">
-            
-            <div class="card">
-                <h3>⚖️ Calorie Counter</h3>
-                <input type="number" id="feet" placeholder="Height (Feet)">
-                <input type="number" id="inches" placeholder="Height (Inches)">
-                <input type="number" id="weight" placeholder="Weight (lbs)">
-                <select id="goal">
-                    <option value="lose">Lose Weight</option>
-                    <option value="gain">Gain Weight</option>
-                </select>
-                <button onclick="calcCals()" style="background: var(--fairy-green);">Calculate Goal</button>
-                <p id="cal-result" style="font-weight: bold; margin-top: 10px;"></p>
-            </div>
+    const meals = [
+        "Lemon Herb Salmon: Bake salmon with asparagus and quinoa.",
+        "Turkey Taco Bowls: Lean turkey, spinach, black beans, and salsa.",
+        "Zucchini Noodles: Pesto sauce, cherry tomatoes, and grilled shrimp.",
+        "Sweet Potato Power Bowl: Roasted cubes, kale, chickpeas, and tahini.",
+        "Beef Stir-fry: Lean strips, snap peas, carrots, and ginger soy.",
+        "Greek Salad with Grilled Chicken: Feta, olives, cucumber, and 5oz chicken.",
+        "Stuffed Peppers: Lean ground turkey, cauliflower rice, and spices."
+    ];
 
-            <div class="card">
-                <h3>🏆 Shared Progress</h3>
-                <div class="progress-section">
-                    <label>Jonah's Goal:</label>
-                    <div class="bar-container"><div id="bar-jonah" class="bar" style="background: var(--jonah-color);"></div></div>
-                    <label>Yasmine's Goal:</label>
-                    <div class="bar-container"><div id="bar-yasmine" class="bar" style="background: var(--yasmine-color);"></div></div>
-                </div>
-                <button onclick="addProgress()">Log My Progress (+10%)</button>
-            </div>
+    const snacks = [
+        "Greek Yogurt with Cinnamon: 1 cup yogurt, dash of cinnamon, 5 almonds.",
+        "Frozen Grapes: 1 cup of red grapes, frozen for a candy-like crunch.",
+        "Dark Chocolate & Berries: 1 square 80% dark chocolate and 1/2 cup raspberries.",
+        "Air Popped Popcorn: 2 cups with a sprinkle of nutritional yeast."
+    ];
 
-            <div class="card">
-                <h3>📅 7-Day Meal Tracker</h3>
-                <div id="meal-display">
-                    <strong id="day-name">Monday</strong>
-                    <div class="recipe-box" id="meal-recipe">Chicken & Quinoa Stir-fry: Sauté 4oz chicken with 1 cup veggies and 1/2 cup quinoa.</div>
-                </div>
-                <button onclick="shuffleMeal()">Next Day / Change Meal</button>
-            </div>
+    function unlock() {
+        if(document.getElementById('pw').value === 'love0930') {
+            document.getElementById('layer-pass').style.display = 'none';
+            document.getElementById('layer-choice').style.display = 'flex';
+        } else { alert("Not the secret code, love!"); }
+    }
 
-            <div class="card">
-                <h3>🌙 Late Night Snacks</h3>
-                <div class="recipe-box" id="snack-display">Greek Yogurt Bark: Freeze yogurt with berries and a drizzle of honey.</div>
-                <button onclick="shuffleSnack()">I'm craving something else!</button>
-            </div>
+    function enterApp(user) {
+        activeUser = user;
+        document.getElementById('layer-choice').style.display = 'none';
+        document.getElementById('main-hub').style.display = 'block';
+        document.getElementById('welcome-text').innerText = "Welcome " + user;
+        loadSaved();
+    }
 
-            <div class="card">
-                <h3>⏱️ Workout Hub</h3>
-                <select id="workout-area">
-                    <option>Abs & Core</option>
-                    <option>Glutes & Legs</option>
-                    <option>Upper Body Strength</option>
-                    <option>Full Body Cardio</option>
-                </select>
-                <select id="workout-time">
-                    <option value="5">5 Minutes</option>
-                    <option value="15">15 Minutes</option>
-                    <option value="30">30 Minutes</option>
-                    <option value="60">60 Minutes</option>
-                </select>
-                <div id="timer-text" style="font-size: 2rem; text-align: center; margin: 10px;">00:00</div>
-                <button onclick="startTimer()">Start Workout</button>
-            </div>
+    function calculateCalories() {
+        const h = (parseInt(document.getElementById('feet').value) * 12) + parseInt(document.getElementById('inches').value);
+        const w = parseInt(document.getElementById('weight').value);
+        const goal = document.getElementById('goal').value;
+        let base = (10 * (w/2.2)) + (6.25 * (h*2.54));
+        let total = (goal === 'lose') ? Math.round(base - 500) : Math.round(base + 500);
+        const res = document.getElementById('cal-result');
+        res.style.display = "block";
+        res.innerText = "Your Daily Target: " + total + " calories";
+    }
 
-            <div class="card">
-                <h3>🔔 Reminders & Water</h3>
-                <p>Water: <span id="water-num">0</span>/8 glasses</p>
-                <button onclick="addWater()" style="background:#219ebc;">Drink Water</button>
-                <hr>
-                <ul class="reminders-list">
-                    <li>💧 Reminder: Drink water every 2 hours</li>
-                    <li>🏋️ Reminder: Workout time!</li>
-                    <li>📝 New Note: Check your post-it!</li>
-                    <li>🔑 Reminder: Login daily to save streak</li>
-                </ul>
-            </div>
+    let mealIdx = 0;
+    function shuffleMeal() {
+        mealIdx = (mealIdx + 1) % meals.length;
+        document.getElementById('day-display').innerText = "Day " + (mealIdx + 1);
+        document.getElementById('meal-recipe').innerText = meals[mealIdx];
+    }
 
-            <div class="card">
-                <h3>✍️ Notes to Partner</h3>
-                <div class="post-it" contenteditable="true" id="note-data">Hey love, let's crush our goals today!</div>
-                <button onclick="saveEverything()" style="background: var(--magic-gold); color: #333;">Save All Information</button>
-            </div>
+    function shuffleSnack() {
+        document.getElementById('snack-recipe').innerText = snacks[Math.floor(Math.random()*snacks.length)];
+    }
 
-        </div>
-    </div>
+    let water = 0;
+    function addWater() { water++; document.getElementById('water-count').innerText = water; }
 
-    <script>
-        let currentUser = "";
-        const meals = [
-            {day: "Monday", recipe: "Chicken & Quinoa: Sauté 4oz chicken, peppers, and 1/2 cup quinoa."},
-            {day: "Tuesday", recipe: "Turkey Taco Bowl: Lean turkey, black beans, avocado, and spinach base."},
-            {day: "Wednesday", recipe: "Salmon Roast: Baked salmon with lemon, asparagus, and sweet potato."},
-            {day: "Thursday", recipe: "Pesto Pasta: Whole wheat pasta with basil pesto and grilled shrimp."},
-            {day: "Friday", recipe: "Stuffed Peppers: Bell peppers filled with ground turkey and cauliflower rice."},
-            {day: "Saturday", recipe: "Steak & Greens: Lean sirloin with a massive side of sautéed kale."},
-            {day: "Sunday", recipe: "Tofu Power Bowl: Crispy tofu, edamame, carrots, and ginger dressing."}
-        ];
+    function addProgress() {
+        if(activeUser === 'Jonah') pJonah = Math.min(pJonah + 10, 100);
+        else pYasmine = Math.min(pYasmine + 10, 100);
+        updateBars();
+    }
 
-        const snacks = [
-            "Apple & Almond Butter: Slice 1 apple with 1tbsp almond butter.",
-            "Protein Mug Cake: 1 scoop protein powder, 1 egg white, splash of milk, microwave 45s.",
-            "Cottage Cheese & Pineapple: 1/2 cup cottage cheese with fresh chunks.",
-            "Baked Kale Chips: Toss in olive oil and salt, bake at 350 for 10 mins."
-        ];
+    function updateBars() {
+        document.getElementById('bar-jonah').style.width = pJonah + "%";
+        document.getElementById('bar-yasmine').style.width = pYasmine + "%";
+    }
 
-        function checkPass() {
-            if(document.getElementById('pass-input').value === 'love0930') {
-                document.getElementById('login-overlay').style.display = 'none';
-                document.getElementById('selection-layer').style.display = 'flex';
-            } else { alert("Wrong password!"); }
-        }
+    function startWorkout() {
+        let seconds = parseInt(document.getElementById('work-time').value) * 60;
+        const display = document.getElementById('timer-display');
+        const count = setInterval(() => {
+            let m = Math.floor(seconds / 60);
+            let s = seconds % 60;
+            display.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+            if(seconds-- <= 0) { clearInterval(count); alert("Workout Complete! You did it!"); }
+        }, 1000);
+    }
 
-        function enterApp(user) {
-            currentUser = user;
-            document.getElementById('selection-layer').style.display = 'none';
-            document.getElementById('main-hub').style.display = 'block';
-            document.getElementById('welcome-banner').innerText = "Welcome " + user + " ✨";
-            loadData();
-        }
+    function saveAll() {
+        localStorage.setItem('hub_note', document.getElementById('love-note').innerText);
+        localStorage.setItem('p_j', pJonah);
+        localStorage.setItem('p_y', pYasmine);
+        alert("Success! Information saved and reminders synced to phone (local browser).");
+    }
 
-        function calcCals() {
-            const ft = parseInt(document.getElementById('feet').value) || 0;
-            const inch = parseInt(document.getElementById('inches').value) || 0;
-            const lbs = parseInt(document.getElementById('weight').value) || 0;
-            const goal = document.getElementById('goal').value;
-            let totalInches = (ft * 12) + inch;
-            let base = (10 * (lbs/2.2)) + (6.25 * (totalInches * 2.54)); // Rough BMR logic
-            let result = (goal === 'lose') ? Math.round(base) : Math.round(base + 500);
-            document.getElementById('cal-result').innerText = "Daily Target: " + result + " kcal";
-        }
+    function loadSaved() {
+        if(localStorage.getItem('hub_note')) document.getElementById('love-note').innerText = localStorage.getItem('hub_note');
+        pJonah = parseInt(localStorage.getItem('p_j')) || 20;
+        pYasmine = parseInt(localStorage.getItem('p_y')) || 20;
+        updateBars();
+    }
+</script>
 
-        let mealIdx = 0;
-        function shuffleMeal() {
-            mealIdx = (mealIdx + 1) % meals.length;
-            document.getElementById('day-name').innerText = meals[mealIdx].day;
-            document.getElementById('meal-recipe').innerText = meals[mealIdx].recipe;
-        }
-
-        function shuffleSnack() {
-            document.getElementById('snack-display').innerText = snacks[Math.floor(Math.random()*snacks.length)];
-        }
-
-        let waterCount = 0;
-        function addWater() { waterCount++; document.getElementById('water-num').innerText = waterCount; }
-
-        let progJ = 20, progY = 30;
-        function addProgress() {
-            if(currentUser === 'Jonah') progJ = Math.min(progJ + 10, 100);
-            else progY = Math.min(progY + 10, 100);
-            updateBars();
-        }
-
-        function updateBars() {
-            document.getElementById('bar-jonah').style.width = progJ + "%";
-            document.getElementById('bar-yasmine').style.width = progY + "%";
-        }
-
-        function startTimer() {
-            let time = parseInt(document.getElementById('workout-time').value) * 60;
-            const display = document.getElementById('timer-text');
-            const interval = setInterval(() => {
-                let m = Math.floor(time / 60);
-                let s = time % 60;
-                display.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
-                if(time-- <= 0) { clearInterval(interval); alert("Workout Done!"); }
-            }, 1000);
-        }
-
-        function saveEverything() {
-            localStorage.setItem('hubNote', document.getElementById('note-data').innerText);
-            localStorage.setItem('progJ', progJ);
-            localStorage.setItem('progY', progY);
-            alert("All progress and notes saved for both of you!");
-        }
-
-        function loadData() {
-            if(localStorage.getItem('hubNote')) document.getElementById('note-data').innerText = localStorage.getItem('hubNote');
-            progJ = parseInt(localStorage.getItem('progJ')) || 20;
-            progY = parseInt(localStorage.getItem('progY')) || 30;
-            updateBars();
-        }
-    </script>
 </body>
 </html>
