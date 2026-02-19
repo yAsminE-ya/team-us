@@ -9,295 +9,269 @@
             --fairy-green: #2d6a4f;
             --fairy-purple: #7b2cbf;
             --magic-gold: #ffda3d;
-            --soft-white: #f8f9fa;
+            --jonah-color: #4cc9f0;
+            --yasmine-color: #f72585;
         }
 
         body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0; font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #1b4332 0%, #3c096c 100%);
-            color: white;
-            min-height: 100vh;
-            overflow-x: hidden;
+            color: white; min-height: 100vh;
         }
 
-        /* --- LAYER 1: GATEKEEPER --- */
+        /* --- LAYER 1: PASSWORD --- */
         #login-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.95);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+            position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+            display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 1000;
         }
 
-        /* --- LAYER 2: SELECTION --- */
+        /* --- LAYER 2: SEPARATION (ENTRANCE) --- */
         #selection-layer {
-            display: none;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 50px;
+            display: none; height: 100vh; justify-content: center; align-items: center; gap: 40px;
         }
 
-        .profile-card {
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.3s;
+        .hero-box {
+            text-align: center; cursor: pointer; transition: 0.3s;
+            background: rgba(255,255,255,0.1); padding: 30px; border-radius: 20px;
         }
+        .hero-box:hover { transform: translateY(-10px); background: rgba(255,255,255,0.2); }
 
-        .profile-card:hover { transform: scale(1.1); }
-
-        .avatar-circle {
-            width: 150px; height: 150px;
-            border-radius: 50%;
-            border: 4px solid var(--magic-gold);
-            background: #444;
-            margin-bottom: 15px;
-            overflow: hidden;
-        }
-
-        /* --- LAYER 3: MAIN DASHBOARD --- */
-        #dashboard-layer { display: none; padding: 20px; }
+        /* --- LAYER 3: THE MAIN HUB --- */
+        #main-hub { display: none; padding: 20px; }
 
         .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 20px; max-width: 1200px; margin: 0 auto;
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(12px);
-            border-radius: 20px;
-            padding: 25px;
-            border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px);
+            border-radius: 20px; padding: 20px; border: 1px solid rgba(255,255,255,0.2);
         }
 
-        /* Post-it Note Style */
+        /* Post-it Notes */
         .post-it {
-            background: #feff9c;
-            color: #333;
-            padding: 15px;
-            min-height: 150px;
-            transform: rotate(-1deg);
-            box-shadow: 5px 5px 7px rgba(0,0,0,0.2);
-            font-family: 'Comic Sans MS', cursive;
-            border-radius: 2px;
+            background: #fff382; color: #333; padding: 15px; min-height: 120px;
+            box-shadow: 5px 5px 10px rgba(0,0,0,0.3); transform: rotate(-1deg);
+            border-bottom-right-radius: 30px; font-family: 'Comic Sans MS', cursive;
         }
 
-        /* UI Elements */
+        /* Shared Progress Area */
+        .progress-section { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+        .bar-container { background: #222; border-radius: 10px; height: 20px; overflow: hidden; }
+        .bar { height: 100%; width: 0%; transition: width 0.5s ease-in-out; }
+
         button {
-            background: var(--fairy-purple);
-            color: white; border: none;
-            padding: 10px 15px; border-radius: 8px;
-            cursor: pointer; font-weight: bold;
-            transition: 0.2s;
+            background: var(--fairy-purple); color: white; border: none;
+            padding: 10px; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 10px;
         }
 
-        button:hover { filter: brightness(1.2); }
+        input, select { width: 94%; padding: 8px; margin-bottom: 10px; border-radius: 5px; border: none; }
+        
+        .recipe-box { background: rgba(0,0,0,0.3); padding: 10px; border-radius: 10px; font-size: 0.9rem; margin-top: 10px; }
 
-        input, select {
-            width: 90%; padding: 10px; margin: 5px 0;
-            border-radius: 8px; border: none;
-        }
-
-        .progress-bar-bg {
-            background: #222; border-radius: 10px; height: 15px; margin: 10px 0;
-        }
-
-        #shared-progress {
-            background: linear-gradient(to right, var(--fairy-green), var(--fairy-purple));
-            height: 100%; border-radius: 10px; width: 0%; transition: width 0.5s;
-        }
+        /* Notifications/Reminders Area */
+        .reminders-list { font-size: 0.85rem; list-style: none; padding: 0; }
+        .reminders-list li { background: rgba(255,255,255,0.1); padding: 5px 10px; margin-bottom: 5px; border-left: 4px solid var(--magic-gold); }
     </style>
 </head>
 <body>
 
     <div id="login-overlay">
-        <h2>Enter Our Secret Key</h2>
-        <input type="password" id="pass-input" placeholder="Password...">
-        <button onclick="checkPass()">Unlock</button>
+        <h2>Enter Secret Key</h2>
+        <input type="password" id="pass-input" style="width: 200px; text-align: center;">
+        <button onclick="checkPass()" style="width: 220px;">Open Our World</button>
     </div>
 
     <div id="selection-layer">
-        <div class="profile-card" onclick="enterApp('Jonah')">
-            <div class="avatar-circle"><img src="https://via.placeholder.com/150?text=Jonah" alt="Jonah"></div>
-            <h3>I am Jonah</h3>
+        <div class="hero-box" onclick="enterApp('Jonah')">
+            <h1>Jonah</h1>
+            <p>Freckles & Glasses</p>
         </div>
-        <div class="profile-card" onclick="enterApp('Yasmine')">
-            <div class="avatar-circle"><img src="https://via.placeholder.com/150?text=Yasmine" alt="Yasmine"></div>
-            <h3>I am Yasmine</h3>
+        <div class="hero-box" onclick="enterApp('Yasmine')">
+            <h1>Yasmine</h1>
+            <p>Shoulder-length Black Hair</p>
         </div>
     </div>
 
-    <div id="dashboard-layer">
-        <h1 id="welcome-msg" style="text-align: center; color: var(--magic-gold);"></h1>
-        
+    <div id="main-hub">
+        <h1 id="welcome-banner" style="text-align: center; color: var(--magic-gold);"></h1>
+
         <div class="grid">
             
             <div class="card">
-                <h3>🥗 Calorie Target</h3>
-                <input type="number" id="feet" placeholder="Height (ft)">
-                <input type="number" id="inches" placeholder="Height (in)">
+                <h3>⚖️ Calorie Counter</h3>
+                <input type="number" id="feet" placeholder="Height (Feet)">
+                <input type="number" id="inches" placeholder="Height (Inches)">
                 <input type="number" id="weight" placeholder="Weight (lbs)">
                 <select id="goal">
                     <option value="lose">Lose Weight</option>
                     <option value="gain">Gain Weight</option>
                 </select>
-                <button onclick="calculateCalories()">Calculate</button>
-                <p id="cal-output"></p>
-            </div>
-
-            <div class="card">
-                <h3>🍽️ 7-Day Meal Plan</h3>
-                <div id="meal-content">
-                    <strong>Monday:</strong> <span id="current-recipe">Quinoa Salad</span>
-                </div>
-                <button onclick="shuffleRecipe()" style="margin-top:10px;">Shuffle Recipe</button>
-            </div>
-
-            <div class="card">
-                <h3>💧 Water Intake</h3>
-                <p>Glasses: <span id="water-count">0</span>/8</p>
-                <button onclick="addWater()">Drink 1 Glass</button>
-                <button onclick="resetWater()" style="background:#444;">Reset</button>
-            </div>
-
-            <div class="card">
-                <h3>💪 Start a Workout</h3>
-                <select id="workout-area">
-                    <option>Full Body</option>
-                    <option>Abs & Core</option>
-                    <option>Leg Day</option>
-                </select>
-                <select id="workout-time">
-                    <option value="5">5 Minutes</option>
-                    <option value="20">20 Minutes</option>
-                    <option value="60">60 Minutes</option>
-                </select>
-                <div id="timer-box" style="font-size: 24px; margin: 10px 0;">00:00</div>
-                <button onclick="startTimer()">Start Timer</button>
-            </div>
-
-            <div class="card">
-                <h3>📝 Note to Partner</h3>
-                <div class="post-it" contenteditable="true" id="partner-note">
-                    Leave a sweet message here...
-                </div>
-                <button onclick="saveInfo()" style="margin-top:10px; width: 100%;">Save Note & Info</button>
+                <button onclick="calcCals()" style="background: var(--fairy-green);">Calculate Goal</button>
+                <p id="cal-result" style="font-weight: bold; margin-top: 10px;"></p>
             </div>
 
             <div class="card">
                 <h3>🏆 Shared Progress</h3>
-                <div class="progress-bar-bg">
-                    <div id="shared-progress"></div>
+                <div class="progress-section">
+                    <label>Jonah's Goal:</label>
+                    <div class="bar-container"><div id="bar-jonah" class="bar" style="background: var(--jonah-color);"></div></div>
+                    <label>Yasmine's Goal:</label>
+                    <div class="bar-container"><div id="bar-yasmine" class="bar" style="background: var(--yasmine-color);"></div></div>
                 </div>
-                <button onclick="updateProgress()">Log Progress (+10%)</button>
+                <button onclick="addProgress()">Log My Progress (+10%)</button>
             </div>
 
             <div class="card">
-                <h3>🌙 Healthy Late Night Cravings</h3>
-                <p><i>Try:</i> <span id="snack-idea">Greek Yogurt with Honey</span></p>
-                <button onclick="shuffleSnack()">I want something else</button>
+                <h3>📅 7-Day Meal Tracker</h3>
+                <div id="meal-display">
+                    <strong id="day-name">Monday</strong>
+                    <div class="recipe-box" id="meal-recipe">Chicken & Quinoa Stir-fry: Sauté 4oz chicken with 1 cup veggies and 1/2 cup quinoa.</div>
+                </div>
+                <button onclick="shuffleMeal()">Next Day / Change Meal</button>
+            </div>
+
+            <div class="card">
+                <h3>🌙 Late Night Snacks</h3>
+                <div class="recipe-box" id="snack-display">Greek Yogurt Bark: Freeze yogurt with berries and a drizzle of honey.</div>
+                <button onclick="shuffleSnack()">I'm craving something else!</button>
+            </div>
+
+            <div class="card">
+                <h3>⏱️ Workout Hub</h3>
+                <select id="workout-area">
+                    <option>Abs & Core</option>
+                    <option>Glutes & Legs</option>
+                    <option>Upper Body Strength</option>
+                    <option>Full Body Cardio</option>
+                </select>
+                <select id="workout-time">
+                    <option value="5">5 Minutes</option>
+                    <option value="15">15 Minutes</option>
+                    <option value="30">30 Minutes</option>
+                    <option value="60">60 Minutes</option>
+                </select>
+                <div id="timer-text" style="font-size: 2rem; text-align: center; margin: 10px;">00:00</div>
+                <button onclick="startTimer()">Start Workout</button>
+            </div>
+
+            <div class="card">
+                <h3>🔔 Reminders & Water</h3>
+                <p>Water: <span id="water-num">0</span>/8 glasses</p>
+                <button onclick="addWater()" style="background:#219ebc;">Drink Water</button>
+                <hr>
+                <ul class="reminders-list">
+                    <li>💧 Reminder: Drink water every 2 hours</li>
+                    <li>🏋️ Reminder: Workout time!</li>
+                    <li>📝 New Note: Check your post-it!</li>
+                    <li>🔑 Reminder: Login daily to save streak</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>✍️ Notes to Partner</h3>
+                <div class="post-it" contenteditable="true" id="note-data">Hey love, let's crush our goals today!</div>
+                <button onclick="saveEverything()" style="background: var(--magic-gold); color: #333;">Save All Information</button>
             </div>
 
         </div>
     </div>
 
     <script>
-        const recipes = ["Quinoa Salad", "Grilled Chicken Pesto", "Tofu Stir-fry", "Salmon & Asparagus", "Zucchini Noodles", "Chickpea Curry", "Turkey Wraps"];
-        const snacks = ["Apple slices with PB", "Handful of Almonds", "Cottage Cheese", "Frozen Grapes", "Air-popped Popcorn"];
-        let progress = 0;
+        let currentUser = "";
+        const meals = [
+            {day: "Monday", recipe: "Chicken & Quinoa: Sauté 4oz chicken, peppers, and 1/2 cup quinoa."},
+            {day: "Tuesday", recipe: "Turkey Taco Bowl: Lean turkey, black beans, avocado, and spinach base."},
+            {day: "Wednesday", recipe: "Salmon Roast: Baked salmon with lemon, asparagus, and sweet potato."},
+            {day: "Thursday", recipe: "Pesto Pasta: Whole wheat pasta with basil pesto and grilled shrimp."},
+            {day: "Friday", recipe: "Stuffed Peppers: Bell peppers filled with ground turkey and cauliflower rice."},
+            {day: "Saturday", recipe: "Steak & Greens: Lean sirloin with a massive side of sautéed kale."},
+            {day: "Sunday", recipe: "Tofu Power Bowl: Crispy tofu, edamame, carrots, and ginger dressing."}
+        ];
+
+        const snacks = [
+            "Apple & Almond Butter: Slice 1 apple with 1tbsp almond butter.",
+            "Protein Mug Cake: 1 scoop protein powder, 1 egg white, splash of milk, microwave 45s.",
+            "Cottage Cheese & Pineapple: 1/2 cup cottage cheese with fresh chunks.",
+            "Baked Kale Chips: Toss in olive oil and salt, bake at 350 for 10 mins."
+        ];
 
         function checkPass() {
-            const val = document.getElementById('pass-input').value;
-            if(val === 'love0930') {
+            if(document.getElementById('pass-input').value === 'love0930') {
                 document.getElementById('login-overlay').style.display = 'none';
                 document.getElementById('selection-layer').style.display = 'flex';
-            } else {
-                alert("That's not the secret key, love!");
-            }
+            } else { alert("Wrong password!"); }
         }
 
-        function enterApp(name) {
+        function enterApp(user) {
+            currentUser = user;
             document.getElementById('selection-layer').style.display = 'none';
-            document.getElementById('dashboard-layer').style.display = 'block';
-            document.getElementById('welcome-msg').innerText = "Welcome " + name + " ✨";
-            loadSavedData();
+            document.getElementById('main-hub').style.display = 'block';
+            document.getElementById('welcome-banner').innerText = "Welcome " + user + " ✨";
+            loadData();
         }
 
-        function calculateCalories() {
-            const f = parseInt(document.getElementById('feet').value);
-            const i = parseInt(document.getElementById('inches').value);
-            const w = parseInt(document.getElementById('weight').value);
+        function calcCals() {
+            const ft = parseInt(document.getElementById('feet').value) || 0;
+            const inch = parseInt(document.getElementById('inches').value) || 0;
+            const lbs = parseInt(document.getElementById('weight').value) || 0;
             const goal = document.getElementById('goal').value;
-            
-            // Basic calculation logic
-            let base = (w * 10) + (((f * 12) + i) * 6);
-            let total = (goal === 'lose') ? base - 500 : base + 500;
-            document.getElementById('cal-output').innerText = "Your daily goal: " + total + " kcal";
+            let totalInches = (ft * 12) + inch;
+            let base = (10 * (lbs/2.2)) + (6.25 * (totalInches * 2.54)); // Rough BMR logic
+            let result = (goal === 'lose') ? Math.round(base) : Math.round(base + 500);
+            document.getElementById('cal-result').innerText = "Daily Target: " + result + " kcal";
         }
 
-        function shuffleRecipe() {
-            const rand = recipes[Math.floor(Math.random() * recipes.length)];
-            document.getElementById('current-recipe').innerText = rand;
+        let mealIdx = 0;
+        function shuffleMeal() {
+            mealIdx = (mealIdx + 1) % meals.length;
+            document.getElementById('day-name').innerText = meals[mealIdx].day;
+            document.getElementById('meal-recipe').innerText = meals[mealIdx].recipe;
         }
 
         function shuffleSnack() {
-            const rand = snacks[Math.floor(Math.random() * snacks.length)];
-            document.getElementById('snack-idea').innerText = rand;
+            document.getElementById('snack-display').innerText = snacks[Math.floor(Math.random()*snacks.length)];
         }
 
-        let water = 0;
-        function addWater() {
-            water++;
-            document.getElementById('water-count').innerText = water;
-        }
-        function resetWater() { water = 0; document.getElementById('water-count').innerText = 0; }
+        let waterCount = 0;
+        function addWater() { waterCount++; document.getElementById('water-num').innerText = waterCount; }
 
-        function updateProgress() {
-            progress = Math.min(progress + 10, 100);
-            document.getElementById('shared-progress').style.width = progress + "%";
+        let progJ = 20, progY = 30;
+        function addProgress() {
+            if(currentUser === 'Jonah') progJ = Math.min(progJ + 10, 100);
+            else progY = Math.min(progY + 10, 100);
+            updateBars();
+        }
+
+        function updateBars() {
+            document.getElementById('bar-jonah').style.width = progJ + "%";
+            document.getElementById('bar-yasmine').style.width = progY + "%";
         }
 
         function startTimer() {
-            let mins = parseInt(document.getElementById('workout-time').value);
-            let seconds = mins * 60;
-            const timerDisplay = document.getElementById('timer-box');
-            
-            const countdown = setInterval(() => {
-                let m = Math.floor(seconds / 60);
-                let s = seconds % 60;
-                timerDisplay.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
-                if (seconds <= 0) {
-                    clearInterval(countdown);
-                    alert("Workout complete! Great job!");
-                }
-                seconds--;
+            let time = parseInt(document.getElementById('workout-time').value) * 60;
+            const display = document.getElementById('timer-text');
+            const interval = setInterval(() => {
+                let m = Math.floor(time / 60);
+                let s = time % 60;
+                display.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+                if(time-- <= 0) { clearInterval(interval); alert("Workout Done!"); }
             }, 1000);
         }
 
-        function saveInfo() {
-            localStorage.setItem('hub_note', document.getElementById('partner-note').innerText);
-            localStorage.setItem('hub_progress', progress);
-            alert("Information Saved! Reminders set for your phone.");
+        function saveEverything() {
+            localStorage.setItem('hubNote', document.getElementById('note-data').innerText);
+            localStorage.setItem('progJ', progJ);
+            localStorage.setItem('progY', progY);
+            alert("All progress and notes saved for both of you!");
         }
 
-        function loadSavedData() {
-            if(localStorage.getItem('hub_note')) {
-                document.getElementById('partner-note').innerText = localStorage.getItem('hub_note');
-            }
-            if(localStorage.getItem('hub_progress')) {
-                progress = parseInt(localStorage.getItem('hub_progress'));
-                document.getElementById('shared-progress').style.width = progress + "%";
-            }
+        function loadData() {
+            if(localStorage.getItem('hubNote')) document.getElementById('note-data').innerText = localStorage.getItem('hubNote');
+            progJ = parseInt(localStorage.getItem('progJ')) || 20;
+            progY = parseInt(localStorage.getItem('progY')) || 30;
+            updateBars();
         }
     </script>
 </body>
