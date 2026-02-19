@@ -3,90 +3,213 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Us App</title>
+    <title>Team Us 💖</title>
     <style>
-        body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            background: linear-gradient(to right, #ff69b4, #add8e6);
-            color: #333;
-            animation: fadeIn 1s;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; } 
-            to { opacity: 1; }
-        }
-        /* Add styles for forms and other UI elements */
-        .profile { display: none; }
-        .active { display: block; }
+        :root { --pink: #ffafcc; --hotpink: #ff2e63; --blue: #a2d2ff; --cream: #fffafb; --yellow: #fdffb6; --green: #7ae582; }
+        body { font-family: 'Comic Sans MS', sans-serif; background: var(--pink); color: #444; text-align: center; padding: 10px; }
+        
+        /* Animations */
+        @keyframes hop { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        
+        .card { background: var(--cream); border-radius: 30px; padding: 20px; max-width: 450px; margin: 10px auto; border: 4px solid #ff8fab; box-shadow: 0 8px 0px #fb6f92; position: relative; }
+        
+        #main-content, #setup-screen { display: none; }
+        
+        /* Characters */
+        .char-box { background: white; border-radius: 50%; width: 100px; height: 100px; margin: 0 auto; border: 4px dashed var(--hotpink); display: flex; align-items: center; justify-content: center; }
+        .pixel-char { width: 80px; height: 80px; image-rendering: pixelated; animation: hop 2s infinite; }
+        
+        /* Stats */
+        .stat-box { display: flex; gap: 8px; margin: 15px 0; }
+        .stat { background: #ffe5ec; padding: 10px; border-radius: 20px; flex: 1; border: 2px solid #ffb3c1; font-size: 0.75rem; font-weight: bold; }
+        .stat div { font-size: 1.1rem; color: var(--hotpink); }
+
+        /* Buttons & Inputs */
+        input { padding: 10px; border-radius: 15px; border: 2px solid var(--pink); margin: 5px; width: 80%; outline: none; }
+        button { background: var(--hotpink); color: white; border: none; padding: 12px; border-radius: 50px; cursor: pointer; font-weight: bold; margin-top: 10px; width: 90%; box-shadow: 0 4px 0 #c70039; }
+        button:active { transform: translateY(2px); box-shadow: 0 2px 0 #c70039; }
+
+        /* Love Note */
+        .post-it { background: var(--yellow); padding: 15px; border-radius: 5px; transform: rotate(-1deg); box-shadow: 3px 3px 10px rgba(0,0,0,0.1); border-left: 5px solid #fbdf4b; margin-top: 20px; text-align: left; }
+
+        /* Meal & Snack Recipes */
+        .recipe-box { background: white; border-radius: 20px; padding: 15px; border: 2px solid var(--blue); margin-top: 15px; text-align: left; font-size: 0.85rem; }
+        .snack-tag { display: inline-block; background: #ffccd5; color: #ff2e63; padding: 5px 10px; border-radius: 12px; font-size: 0.75rem; margin: 2px; font-weight: bold; cursor: pointer; }
+
+        #alert-bar { display: none; background: var(--blue); color: white; padding: 10px; border-radius: 20px; margin-bottom: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
-    <h1>Welcome to Team Us</h1>
-    <div id="login">
-        <h2>Login</h2>
-        <input type="password" id="password" placeholder="Enter Password" />
-        <button id="loginBtn">Login</button>
+
+    <div id="login-screen">
+        <h1 style="color: white; text-shadow: 2px 2px var(--hotpink);">🎀 Team Us 🎀</h1>
+        <div class="card">
+            <input type="text" id="user-name" placeholder="Who are you?">
+            <input type="password" id="pass-input" placeholder="Secret Code">
+            <button onclick="checkPass()">Unlock Our World ✨</button>
+        </div>
     </div>
 
-    <div id="profiles" class="profile">
-        <h2>Profiles</h2>
-        <div id="him" class="profile-info active">
-            <h3>Him</h3>
-            <!-- Add Him's profile details -->
+    <div id="setup-screen">
+        <div class="card">
+            <h2 style="color: var(--hotpink);">Profile Setup 🌱</h2>
+            <div style="display: flex; gap: 10px;">
+                <div style="flex:1; background:#fff1f2; padding:10px; border-radius:15px;">
+                    <p><b>Him 👓</b></p>
+                    <input type="number" id="h-lbs" placeholder="lbs">
+                    <input type="number" id="h-ft" placeholder="ft">
+                    <input type="number" id="h-in" placeholder="in">
+                    <input type="number" id="h-age" placeholder="age">
+                </div>
+                <div style="flex:1; background:#fff1f2; padding:10px; border-radius:15px;">
+                    <p><b>Her 🎀</b></p>
+                    <input type="number" id="f-lbs" placeholder="lbs">
+                    <input type="number" id="f-ft" placeholder="ft">
+                    <input type="number" id="f-in" placeholder="in">
+                    <input type="number" id="f-age" placeholder="age">
+                </div>
+            </div>
+            <button onclick="saveSetup()">Calculate My Goals! ✨</button>
         </div>
-        <div id="her" class="profile-info">
-            <h3>Her</h3>
-            <!-- Add Her's profile details -->
-        </div>
-        <button id="switchProfile">Switch Profile</button>
-        <button id="logoutBtn">Logout</button>
     </div>
 
-    <div class="tracker">
-        <h2>Calorie Tracker</h2>
-        <input type="number" id="caloriesInput" placeholder="Calories" />
-        <button id="logCaloriesBtn">Log Calories</button>
-        <p id="calorieCount">Total Calories: 0</p>
+    <div id="main-content">
+        <div id="alert-bar">💦 Hydration Time, Cutie!</div>
+        
+        <div class="card">
+            <div class="char-box"><div id="char-display" class="pixel-char"></div></div>
+            <p id="welcome-msg" style="font-weight: bold; color: var(--hotpink);"></p>
+
+            <div style="display:flex; gap:10px; margin-bottom:15px;">
+                <button onclick="switchUser('male')" style="background:white; color:var(--hotpink); border:2px solid var(--hotpink);">Him 👓</button>
+                <button onclick="switchUser('female')" style="background:white; color:var(--hotpink); border:2px solid var(--hotpink);">Her 🎀</button>
+            </div>
+
+            <div class="stat-box">
+                <div class="stat">Goal<div id="s-goal">0</div></div>
+                <div class="stat">Today<div id="s-net">0</div></div>
+                <div class="stat">Left<div id="s-rem">0</div></div>
+            </div>
+
+            <input type="number" id="cal-val" placeholder="Add Calories...">
+            <div style="display: flex; gap: 5px;">
+                <button onclick="updateCals('eat')">Logged 🥗</button>
+                <button onclick="updateCals('burn')" style="background:var(--green); box-shadow: 0 4px 0 #2b9348;">Burned 💪</button>
+                <button onclick="logWater()" style="background:var(--blue); box-shadow: 0 4px 0 #4895ef; width:60px;">💧</button>
+            </div>
+
+            <div class="recipe-box">
+                <p style="font-weight:bold; margin-top:0;">📅 7-Day Meal Plan (Day <span id="day-num">1</span>)</p>
+                <div id="meal-info">Loading today's meal...</div>
+                <button onclick="nextDay()" style="font-size: 0.7rem; padding: 5px; width: auto; margin-top: 10px; background: var(--blue); box-shadow: 0 2px 0 #4895ef;">Next Day's Recipe ➡️</button>
+            </div>
+
+            <div style="margin-top:20px; text-align: left;">
+                <p style="color:var(--hotpink); font-weight:bold; font-size:0.8rem;">🌙 Cravings Crusher (Tap for Recipe)</p>
+                <span class="snack-tag" onclick="showSnack('🍿 Popcorn: Air-pop and spray with light lime juice + chili powder.')">Popcorn</span>
+                <span class="snack-tag" onclick="showSnack('🥒 Pickles: Wrap 1 pickle in a thin turkey slice for a savory 30-cal snack!')">Pickles</span>
+                <span class="snack-tag" onclick="showSnack('🫐 Frozen Grapes: Freeze for 2 hours. Tastes like sorbet candies!')">Frozen Grapes</span>
+                <div id="snack-recipe" style="font-size: 0.75rem; color: #666; margin-top:5px; font-style: italic;"></div>
+            </div>
+
+            <div class="post-it">
+                <b>Love Note:</b><br>
+                <span id="display-note">Type a note below...</span><br>
+                <input type="text" id="note-input" placeholder="Type here..." style="width:70%; font-size: 0.8rem; height: 25px;">
+                <button onclick="saveNote()" style="width:50px; padding:5px; font-size:0.6rem; margin:0;">Post</button>
+            </div>
+
+            <button onclick="resetAll()" style="background:none; color:#ffb3c1; box-shadow:none; font-size:0.6rem; margin-top:20px;">Reset Everything</button>
+        </div>
     </div>
 
     <script>
-        let isLoggedIn = false;
-        const password = 'love2026';
+        const PASS = "love0930";
+        const meals = [
+            "Day 1: Grilled Chicken Salad. (Recipe: 4oz chicken, 2 cups spinach, vinaigrette)",
+            "Day 2: Turkey Taco Bowl. (Recipe: Lean turkey, cauliflower rice, salsa, 1/4 avocado)",
+            "Day 3: Baked Salmon. (Recipe: Salmon fillet, lemon, asparagus, 1/2 sweet potato)",
+            "Day 4: Zucchini Noodles. (Recipe: Zoodles, ground turkey marinara, parmesan)",
+            "Day 5: Egg White Scramble. (Recipe: 3 whites, spinach, peppers, 1 slice whole wheat toast)",
+            "Day 6: Quinoa Veggie Stir-fry. (Recipe: 1/2 cup quinoa, broccoli, snap peas, soy sauce)",
+            "Day 7: Lemon Garlic Shrimp. (Recipe: 6-8 shrimp, garlic, sautéed kale, small brown rice side)"
+        ];
 
-        document.getElementById('loginBtn').onclick = function() {
-            const inputPassword = document.getElementById('password').value;
-            if (inputPassword === password) {
-                isLoggedIn = true;
-                document.getElementById('login').style.display = 'none';
-                document.getElementById('profiles').style.display = 'block';
-            } else {
-                alert('Incorrect password.');
-            }
+        let data = JSON.parse(localStorage.getItem('teamUsFinal')) || {
+            setup: false, lastDate: new Date().toDateString(), waterTime: Date.now(), dayIdx: 0,
+            note: "Welcome to our journey! 💖",
+            male: { g: 0, c: 0, char: `<svg viewBox="0 0 20 20"><rect x="6" y="2" width="8" height="8" fill="black"/><rect x="6" y="5" width="8" height="5" fill="#ffdbac"/><rect x="7" y="6" width="2" height="2" fill="black"/><rect x="11" y="6" width="2" height="2" fill="black"/><rect x="7" y="10" width="6" height="7" fill="#0ea5e9"/></svg>` },
+            female: { g: 0, c: 0, char: `<svg viewBox="0 0 20 20"><rect x="5" y="2" width="10" height="9" fill="black"/><rect x="6" y="4" width="8" height="6" fill="#ffdbac"/><rect x="7" y="6" width="1" height="1" fill="black"/><rect x="12" y="6" width="1" height="1" fill="black"/><rect x="7" y="10" width="6" height="7" fill="#db2777"/></svg>` }
         };
+        let currentUser = 'male';
 
-        document.getElementById('switchProfile').onclick = function() {
-            const him = document.getElementById('him');
-            const her = document.getElementById('her');
-            if (him.classList.contains('active')) {
-                him.classList.remove('active');
-                her.classList.add('active');
-            } else {
-                her.classList.remove('active');
-                him.classList.add('active');
-            }
-        };
+        function checkPass() {
+            if (document.getElementById('pass-input').value === PASS) {
+                if (data.lastDate !== new Date().toDateString()) {
+                    data.male.c = 0; data.female.c = 0; data.lastDate = new Date().toDateString(); save();
+                }
+                document.getElementById('login-screen').style.display = 'none';
+                if (data.setup) { showApp(); } else { document.getElementById('setup-screen').style.display = 'flex'; }
+            } else { alert("Wrong password! Try our anniversary date?"); }
+        }
 
-        // Calorie tracking logic
-        let totalCalories = 0;
-        document.getElementById('logCaloriesBtn').onclick = function() {
-            const calories = parseInt(document.getElementById('caloriesInput').value);
-            if (!isNaN(calories)) {
-                totalCalories += calories;
-                document.getElementById('calorieCount').innerText = 'Total Calories: ' + totalCalories;
-            }
-        };
+        function saveSetup() {
+            const calc = (lbs, ft, inc, age, male) => {
+                let kg = lbs * 0.45, cm = (ft * 30.4) + (inc * 2.5);
+                let bmr = (10 * kg) + (6.25 * cm) - (5 * age);
+                return Math.round((male ? bmr + 5 : bmr - 161) - 500);
+            };
+            data.male.g = calc(document.getElementById('h-lbs').value, document.getElementById('h-ft').value, document.getElementById('h-in').value, document.getElementById('h-age').value, true);
+            data.female.g = calc(document.getElementById('f-lbs').value, document.getElementById('f-ft').value, document.getElementById('f-in').value, document.getElementById('f-age').value, false);
+            data.setup = true; save(); showApp();
+        }
 
-        // Add other features like water reminders, love notes, cravings crusher, and local storage here.
+        function showApp() {
+            document.getElementById('setup-screen').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+            document.getElementById('display-note').innerText = data.note;
+            updateMeal(); switchUser('male');
+            setInterval(() => { if((Date.now()-data.waterTime) > 7200000) document.getElementById('alert-bar').style.display='block'; }, 60000);
+        }
+
+        function updateMeal() {
+            document.getElementById('day-num').innerText = data.dayIdx + 1;
+            document.getElementById('meal-info').innerText = meals[data.dayIdx];
+        }
+
+        function nextDay() { data.dayIdx = (data.dayIdx + 1) % 7; updateMeal(); save(); }
+
+        function showSnack(txt) { document.getElementById('snack-recipe').innerText = txt; }
+
+        function switchUser(g) {
+            currentUser = g;
+            document.getElementById('char-display').innerHTML = data[g].char;
+            document.getElementById('welcome-msg').innerText = "Hello, " + (g === 'male' ? "Him" : "Her") + "! ✨";
+            refresh();
+        }
+
+        function updateCals(m) {
+            const v = parseInt(document.getElementById('cal-val').value) || 0;
+            data[currentUser].c = m === 'eat' ? data[currentUser].c + v : data[currentUser].c - v;
+            save(); refresh(); document.getElementById('cal-val').value = '';
+        }
+
+        function saveNote() {
+            data.note = '"' + document.getElementById('note-input').value + '"';
+            document.getElementById('display-note').innerText = data.note;
+            save(); document.getElementById('note-input').value = "";
+        }
+
+        function logWater() { data.waterTime = Date.now(); document.getElementById('alert-bar').style.display = 'none'; save(); }
+
+        function refresh() {
+            document.getElementById('s-goal').innerText = data[currentUser].g;
+            document.getElementById('s-net').innerText = data[currentUser].c;
+            document.getElementById('s-rem').innerText = data[currentUser].g - data[currentUser].c;
+        }
+
+        function save() { localStorage.setItem('teamUsFinal', JSON.stringify(data)); }
+        function resetAll() { if(confirm("Start over?")) { localStorage.clear(); location.reload(); } }
     </script>
 </body>
 </html>
