@@ -3,28 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Us Fitness Portal</title>
+    <title>Team Us - Personal Coach</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #fdf2f8; color: #333; text-align: center; padding: 10px; }
+        #login-screen, #setup-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; }
+        #main-content, #setup-screen { display: none; }
+        .card { background: white; border-radius: 20px; padding: 20px; max-width: 500px; margin: 10px auto; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 2px solid #f9a8d4; }
+        input { padding: 10px; border-radius: 10px; border: 2px solid #f9a8d4; margin: 5px; width: 80%; max-width: 200px; text-align: center; }
+        .stat-box { display: flex; justify-content: space-around; margin-bottom: 15px; }
+        .stat { background: #fce7f3; padding: 8px; border-radius: 10px; width: 30%; font-size: 0.7rem; font-weight: bold; }
+        button { background: #db2777; color: white; border: none; padding: 10px 15px; border-radius: 50px; font-size: 12px; cursor: pointer; margin: 3px; }
+        .info-box { text-align: left; background: #fff5f7; padding: 12px; border-radius: 15px; font-size: 0.85rem; }
+        .section { border-top: 1px solid #fee2e2; padding-top: 15px; margin-top: 15px; }
+        select { padding: 10px; border-radius: 10px; border: 2px solid #f9a8d4; margin: 5px; }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>Team Us Fitness Portal</h1>
-    </header>
-    <main>
-        <section id="calorie-tracker">
-            <h2>Calorie Tracker</h2>
-            <!-- Calorie tracker implementation goes here -->
-        </section>
-        <section id="workout-plans">
-            <h2>Workout Plans</h2>
-            <!-- Workout plans implementation goes here -->
-        </section>
-        <section id="meal-planning">
-            <h2>Meal Planning</h2>
-            <!-- Meal planning implementation goes here -->
-        </section>
-    </main>
-    <footer>
-        <p>&copy; 2026 Team Us Fitness Portal</p>
-    </footer>
+
+    <div id="login-screen">
+        <h2 style="color: #db2777;">🔒 Team Us Private Area</h2>
+        <input type="password" id="pass-input" placeholder="Password...">
+        <button onclick="checkPassword()">Unlock</button>
+    </div>
+
+    <div id="setup-screen">
+        <div class="card">
+            <h2 style="color: #db2777;">Welcome! Let's Calculate</h2>
+            <p style="font-size: 0.8rem;">We'll use your stats to find your daily calorie goal for weight loss.</p>
+            <input type="number" id="weight" placeholder="Weight (kg)">
+            <input type="number" id="height" placeholder="Height (cm)">
+            <input type="number" id="age" placeholder="Age">
+            <select id="gender">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+            <button onclick="calculateGoal()">Set My Goal</button>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <div class="card">
+            <h1>Team Us Fitness</h1>
+            <div class="stat-box">
+                <div class="stat">Budget<div id="cal-budget">---</div></div>
+                <div class="stat">Eaten<div id="eaten">0</div></div>
+                <div class="stat">Left<div id="remaining">---</div></div>
+            </div>
+
+            <div class="section">
+                <h3>🔥 Calorie Tracker</h3>
+                <input type="number" id="cal-input" placeholder="Calories (e.g. 300)">
+                <div style="display:flex; justify-content:center;">
+                    <button onclick="updateCals('eat')">Eat Meal 🥗</button>
+                    <button style="background:#10b981" onclick="updateCals('burn')">Burn 🏃‍♂️</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>💪 Today's Workout</h3>
+                <div class="info-box">
+                    <b>HIIT Burn:</b> 30s Squat Jumps, 30s rest (Repeat 10x).<br>
+                    <i>Burns approx. 150-200 calories.</i>
+                </div>
+            </div>
+
+            <button style="background:#0ea5e9; margin-top:10px;" onclick="location.reload()">Reset Day</button>
+        </div>
+    </div>
+
+    <script>
+        const SECRET_PASSWORD = "love2026";
+        let dailyGoal = 0;
+        let currentEaten = 0;
+
+        function checkPassword() {
+            if (document.getElementById('pass-input').value === SECRET_PASSWORD) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('setup-screen').style.display = 'flex';
+            }
+        }
+
+        function calculateGoal() {
+            const w = parseFloat(document.getElementById('weight').value);
+            const h = parseFloat(document.getElementById('height').value);
+            const a = parseFloat(document.getElementById('age').value);
+            const g = document.getElementById('gender').value;
+
+            // Mifflin-St Jeor Formula
+            let bmr = (10 * w) + (6.25 * h) - (5 * a);
+            bmr = (g === 'male') ? bmr + 5 : bmr - 161;
+
+            // Subtract 500 calories for healthy weight loss (approx 0.5kg/1lb per week)
+            dailyGoal = Math.round(bmr - 500);
+            
+            document.getElementById('cal-budget').innerText = dailyGoal;
+            document.getElementById('remaining').innerText = dailyGoal;
+            document.getElementById('setup-screen').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+        }
+
+        function updateCals(type) {
+            const val = parseInt(document.getElementById('cal-input').value) || 0;
+            if (type === 'eat') {
+                currentEaten += val;
+            } else {
+                currentEaten -= val;
+            }
+            document.getElementById('eaten').innerText = currentEaten;
+            document.getElementById('remaining').innerText = dailyGoal - currentEaten;
+            
+            const remDisplay = document.getElementById('remaining');
+            remDisplay.style.color = (dailyGoal - currentEaten < 0) ? "red" : "black";
+            document.getElementById('cal-input').value = "";
+        }
+    </script>
 </body>
 </html>
