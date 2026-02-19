@@ -6,196 +6,299 @@
     <title>The Love & Lift Hub</title>
     <style>
         :root {
-            --forest-green: #2d5a27;
+            --fairy-green: #2d6a4f;
             --fairy-purple: #7b2cbf;
             --magic-gold: #ffda3d;
-            --post-it: #fff382;
+            --soft-white: #f8f9fa;
         }
 
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a3c1a 0%, #3c096c 100%);
+            background: linear-gradient(135deg, #1b4332 0%, #3c096c 100%);
             color: white;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* Login Overlay */
-        #login-screen {
+        /* --- LAYER 1: GATEKEEPER --- */
+        #login-overlay {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
+            inset: 0;
+            background: rgba(0,0,0,0.95);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 100;
+            z-index: 1000;
         }
 
-        /* Layout */
-        .container { display: none; padding: 20px; max-width: 1200px; margin: auto; }
-        
-        .split-header {
+        /* --- LAYER 2: SELECTION --- */
+        #selection-layer {
+            display: none;
+            height: 100vh;
             display: flex;
-            justify-content: space-around;
+            justify-content: center;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .profile-card {
             text-align: center;
-            padding: 40px 0;
-            border-bottom: 2px solid var(--magic-gold);
+            cursor: pointer;
+            transition: transform 0.3s;
         }
 
-        .profile-btn {
-            background: none; border: 2px solid white; color: white;
-            padding: 15px 30px; border-radius: 20px; cursor: pointer;
-            font-size: 1.2rem; transition: 0.3s;
+        .profile-card:hover { transform: scale(1.1); }
+
+        .avatar-circle {
+            width: 150px; height: 150px;
+            border-radius: 50%;
+            border: 4px solid var(--magic-gold);
+            background: #444;
+            margin-bottom: 15px;
+            overflow: hidden;
         }
 
-        .profile-btn:hover { background: var(--fairy-purple); transform: scale(1.1); }
+        /* --- LAYER 3: MAIN DASHBOARD --- */
+        #dashboard-layer { display: none; padding: 20px; }
 
-        /* Widget Grid */
-        .dashboard {
+        .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 20px;
-            margin-top: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .card {
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 20px;
-            border-radius: 15px;
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 25px;
             border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
         }
 
-        /* Post-it Notes */
+        /* Post-it Note Style */
         .post-it {
-            background: var(--post-it);
+            background: #feff9c;
             color: #333;
-            padding: 20px;
-            width: 200px;
-            height: 200px;
-            box-shadow: 5px 5px 10px rgba(0,0,0,0.3);
-            transform: rotate(-2deg);
-            margin: auto;
+            padding: 15px;
+            min-height: 150px;
+            transform: rotate(-1deg);
+            box-shadow: 5px 5px 7px rgba(0,0,0,0.2);
+            font-family: 'Comic Sans MS', cursive;
+            border-radius: 2px;
         }
 
-        input, select, button {
-            width: 100%; padding: 10px; margin: 5px 0; border-radius: 5px; border: none;
+        /* UI Elements */
+        button {
+            background: var(--fairy-purple);
+            color: white; border: none;
+            padding: 10px 15px; border-radius: 8px;
+            cursor: pointer; font-weight: bold;
+            transition: 0.2s;
         }
 
-        .progress-container { background: #444; border-radius: 10px; height: 20px; margin: 10px 0; }
-        .progress-bar { background: var(--magic-gold); height: 100%; width: 45%; border-radius: 10px; }
+        button:hover { filter: brightness(1.2); }
+
+        input, select {
+            width: 90%; padding: 10px; margin: 5px 0;
+            border-radius: 8px; border: none;
+        }
+
+        .progress-bar-bg {
+            background: #222; border-radius: 10px; height: 15px; margin: 10px 0;
+        }
+
+        #shared-progress {
+            background: linear-gradient(to right, var(--fairy-green), var(--fairy-purple));
+            height: 100%; border-radius: 10px; width: 0%; transition: width 0.5s;
+        }
     </style>
 </head>
 <body>
 
-<div id="login-screen">
-    <h2>The Love & Lift Hub</h2>
-    <p>Enter Secret Key:</p>
-    <input type="password" id="pass" placeholder="Password" style="width: 200px;">
-    <button onclick="checkPass()" style="width: 100px; background: var(--fairy-purple); color: white;">Enter</button>
-</div>
-
-<div class="container" id="app">
-    <div class="split-header">
-        <button class="profile-btn" onclick="welcome('Jonah')">Welcome Jonah</button>
-        <button class="profile-btn" onclick="welcome('Yasmine')">Welcome Yasmine</button>
+    <div id="login-overlay">
+        <h2>Enter Our Secret Key</h2>
+        <input type="password" id="pass-input" placeholder="Password...">
+        <button onclick="checkPass()">Unlock</button>
     </div>
 
-    <h2 id="greeting" style="text-align: center; color: var(--magic-gold);">Select a partner to begin</h2>
-
-    <div class="dashboard">
-        <div class="card">
-            <h3>Calorie Counter</h3>
-            <input type="number" id="feet" placeholder="Height (Feet)">
-            <input type="number" id="inches" placeholder="Height (Inches)">
-            <input type="number" id="weight" placeholder="Weight (lbs)">
-            <select id="goal">
-                <option value="lose">Goal: Lose Weight</option>
-                <option value="gain">Goal: Gain Weight</option>
-            </select>
-            <button onclick="calcCals()" style="background: var(--forest-green); color: white;">Calculate</button>
-            <p id="cal-result"></p>
+    <div id="selection-layer">
+        <div class="profile-card" onclick="enterApp('Jonah')">
+            <div class="avatar-circle"><img src="https://via.placeholder.com/150?text=Jonah" alt="Jonah"></div>
+            <h3>I am Jonah</h3>
         </div>
-
-        <div class="card" style="text-align: center;">
-            <h3>Note for My Love</h3>
-            <div class="post-it" contenteditable="true" id="note-area">
-                Write a sweet note here...
-            </div>
-            <button onclick="saveNote()" style="margin-top: 10px;">Save Note</button>
-        </div>
-
-        <div class="card">
-            <h3>Shared Progress</h3>
-            <p>Our Weekly Goal</p>
-            <div class="progress-container">
-                <div class="progress-bar" id="pb"></div>
-            </div>
-            <button onclick="addProgress()">Add Workout (+10%)</button>
-        </div>
-
-        <div class="card">
-            <h3>Mini Timer</h3>
-            <div id="timer-display" style="font-size: 2rem; text-align: center;">05:00</div>
-            <button onclick="startTimer()">Start 5 Min Workout</button>
+        <div class="profile-card" onclick="enterApp('Yasmine')">
+            <div class="avatar-circle"><img src="https://via.placeholder.com/150?text=Yasmine" alt="Yasmine"></div>
+            <h3>I am Yasmine</h3>
         </div>
     </div>
-</div>
 
-<script>
-    function checkPass() {
-        const pass = document.getElementById('pass').value;
-        if(pass === 'love0930') {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('app').style.display = 'block';
-        } else {
-            alert("Wrong password, love!");
+    <div id="dashboard-layer">
+        <h1 id="welcome-msg" style="text-align: center; color: var(--magic-gold);"></h1>
+        
+        <div class="grid">
+            
+            <div class="card">
+                <h3>🥗 Calorie Target</h3>
+                <input type="number" id="feet" placeholder="Height (ft)">
+                <input type="number" id="inches" placeholder="Height (in)">
+                <input type="number" id="weight" placeholder="Weight (lbs)">
+                <select id="goal">
+                    <option value="lose">Lose Weight</option>
+                    <option value="gain">Gain Weight</option>
+                </select>
+                <button onclick="calculateCalories()">Calculate</button>
+                <p id="cal-output"></p>
+            </div>
+
+            <div class="card">
+                <h3>🍽️ 7-Day Meal Plan</h3>
+                <div id="meal-content">
+                    <strong>Monday:</strong> <span id="current-recipe">Quinoa Salad</span>
+                </div>
+                <button onclick="shuffleRecipe()" style="margin-top:10px;">Shuffle Recipe</button>
+            </div>
+
+            <div class="card">
+                <h3>💧 Water Intake</h3>
+                <p>Glasses: <span id="water-count">0</span>/8</p>
+                <button onclick="addWater()">Drink 1 Glass</button>
+                <button onclick="resetWater()" style="background:#444;">Reset</button>
+            </div>
+
+            <div class="card">
+                <h3>💪 Start a Workout</h3>
+                <select id="workout-area">
+                    <option>Full Body</option>
+                    <option>Abs & Core</option>
+                    <option>Leg Day</option>
+                </select>
+                <select id="workout-time">
+                    <option value="5">5 Minutes</option>
+                    <option value="20">20 Minutes</option>
+                    <option value="60">60 Minutes</option>
+                </select>
+                <div id="timer-box" style="font-size: 24px; margin: 10px 0;">00:00</div>
+                <button onclick="startTimer()">Start Timer</button>
+            </div>
+
+            <div class="card">
+                <h3>📝 Note to Partner</h3>
+                <div class="post-it" contenteditable="true" id="partner-note">
+                    Leave a sweet message here...
+                </div>
+                <button onclick="saveInfo()" style="margin-top:10px; width: 100%;">Save Note & Info</button>
+            </div>
+
+            <div class="card">
+                <h3>🏆 Shared Progress</h3>
+                <div class="progress-bar-bg">
+                    <div id="shared-progress"></div>
+                </div>
+                <button onclick="updateProgress()">Log Progress (+10%)</button>
+            </div>
+
+            <div class="card">
+                <h3>🌙 Healthy Late Night Cravings</h3>
+                <p><i>Try:</i> <span id="snack-idea">Greek Yogurt with Honey</span></p>
+                <button onclick="shuffleSnack()">I want something else</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const recipes = ["Quinoa Salad", "Grilled Chicken Pesto", "Tofu Stir-fry", "Salmon & Asparagus", "Zucchini Noodles", "Chickpea Curry", "Turkey Wraps"];
+        const snacks = ["Apple slices with PB", "Handful of Almonds", "Cottage Cheese", "Frozen Grapes", "Air-popped Popcorn"];
+        let progress = 0;
+
+        function checkPass() {
+            const val = document.getElementById('pass-input').value;
+            if(val === 'love0930') {
+                document.getElementById('login-overlay').style.display = 'none';
+                document.getElementById('selection-layer').style.display = 'flex';
+            } else {
+                alert("That's not the secret key, love!");
+            }
         }
-    }
 
-    function welcome(name) {
-        document.getElementById('greeting').innerText = "Welcome back, " + name + "!";
-    }
-
-    function calcCals() {
-        const wt = document.getElementById('weight').value;
-        const goal = document.getElementById('goal').value;
-        let base = wt * 12; // Simple calculation
-        let result = (goal === 'lose') ? base - 500 : base + 500;
-        document.getElementById('cal-result').innerText = "Daily Target: " + result + " calories";
-    }
-
-    function saveNote() {
-        const note = document.getElementById('note-area').innerText;
-        localStorage.setItem('sharedNote', note);
-        alert("Note saved for your partner!");
-    }
-
-    // Load note on start
-    window.onload = function() {
-        if(localStorage.getItem('sharedNote')) {
-            document.getElementById('note-area').innerText = localStorage.getItem('sharedNote');
+        function enterApp(name) {
+            document.getElementById('selection-layer').style.display = 'none';
+            document.getElementById('dashboard-layer').style.display = 'block';
+            document.getElementById('welcome-msg').innerText = "Welcome " + name + " ✨";
+            loadSavedData();
         }
-    }
 
-    let progress = 45;
-    function addProgress() {
-        progress = Math.min(progress + 10, 100);
-        document.getElementById('pb').style.width = progress + "%";
-    }
+        function calculateCalories() {
+            const f = parseInt(document.getElementById('feet').value);
+            const i = parseInt(document.getElementById('inches').value);
+            const w = parseInt(document.getElementById('weight').value);
+            const goal = document.getElementById('goal').value;
+            
+            // Basic calculation logic
+            let base = (w * 10) + (((f * 12) + i) * 6);
+            let total = (goal === 'lose') ? base - 500 : base + 500;
+            document.getElementById('cal-output').innerText = "Your daily goal: " + total + " kcal";
+        }
 
-    function startTimer() {
-        let time = 300;
-        const display = document.getElementById('timer-display');
-        setInterval(() => {
-            let mins = Math.floor(time / 60);
-            let secs = time % 60;
-            display.innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-            if(time > 0) time--;
-        }, 1000);
-    }
-</script>
+        function shuffleRecipe() {
+            const rand = recipes[Math.floor(Math.random() * recipes.length)];
+            document.getElementById('current-recipe').innerText = rand;
+        }
 
+        function shuffleSnack() {
+            const rand = snacks[Math.floor(Math.random() * snacks.length)];
+            document.getElementById('snack-idea').innerText = rand;
+        }
+
+        let water = 0;
+        function addWater() {
+            water++;
+            document.getElementById('water-count').innerText = water;
+        }
+        function resetWater() { water = 0; document.getElementById('water-count').innerText = 0; }
+
+        function updateProgress() {
+            progress = Math.min(progress + 10, 100);
+            document.getElementById('shared-progress').style.width = progress + "%";
+        }
+
+        function startTimer() {
+            let mins = parseInt(document.getElementById('workout-time').value);
+            let seconds = mins * 60;
+            const timerDisplay = document.getElementById('timer-box');
+            
+            const countdown = setInterval(() => {
+                let m = Math.floor(seconds / 60);
+                let s = seconds % 60;
+                timerDisplay.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+                if (seconds <= 0) {
+                    clearInterval(countdown);
+                    alert("Workout complete! Great job!");
+                }
+                seconds--;
+            }, 1000);
+        }
+
+        function saveInfo() {
+            localStorage.setItem('hub_note', document.getElementById('partner-note').innerText);
+            localStorage.setItem('hub_progress', progress);
+            alert("Information Saved! Reminders set for your phone.");
+        }
+
+        function loadSavedData() {
+            if(localStorage.getItem('hub_note')) {
+                document.getElementById('partner-note').innerText = localStorage.getItem('hub_note');
+            }
+            if(localStorage.getItem('hub_progress')) {
+                progress = parseInt(localStorage.getItem('hub_progress'));
+                document.getElementById('shared-progress').style.width = progress + "%";
+            }
+        }
+    </script>
 </body>
 </html>
